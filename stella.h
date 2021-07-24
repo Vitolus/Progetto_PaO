@@ -8,8 +8,11 @@ class Stella : virtual public Corpo_celeste {
     QString colore;
 public:
     Stella(float, float, float= 1700);
-    float getTemperatura() const;
-    const QString &getColore() const;
+    Stella(Stella &);
+    Stella &operator=(const Stella &);
+    float get_temperatura() const;
+    const QString &get_colore() const;
+    virtual ~Stella();
 };
 
 #endif // STELLA_H

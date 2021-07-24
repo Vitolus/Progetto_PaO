@@ -12,11 +12,15 @@ SOURCES += \
     corpo_celeste.cpp \
     main.cpp \
     mainwindow.cpp \
+    pianeta.cpp \
+    satellite.cpp \
     stella.cpp
 
 HEADERS += \
     corpo_celeste.h \
     mainwindow.h \
+    pianeta.h \
+    satellite.h \
     stella.h
 
 FORMS += \
