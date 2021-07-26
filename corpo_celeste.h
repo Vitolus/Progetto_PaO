@@ -15,7 +15,8 @@ public:
     float get_diametro() const;
     float get_forza_gravita() const;
     bool get_luminoso() const;
-    virtual ~Corpo_celeste()= 0;
+    virtual QVector<std::variant<float,bool,std::string>> get_data() const= 0;
+    virtual ~Corpo_celeste();
 
 };
 

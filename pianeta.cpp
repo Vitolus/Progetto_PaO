@@ -1,7 +1,16 @@
 #include "pianeta.h"
 
-QString Pianeta::get_tipo() const{
+std::string Pianeta::get_tipo() const{
     return tipo ? "roccioso" : "gassoso";
+}
+
+QVector<std::variant<float, bool, std::string>> Pianeta::get_data() const{
+    QVector<std::variant<float, bool, std::string>> data;
+    data.push_back(this->get_diametro());
+    data.push_back(this->get_forza_gravita());
+    data.push_back(this->get_luminoso());
+    data.push_back(this->get_tipo());
+    return data;
 }
 
 Pianeta::~Pianeta(){}

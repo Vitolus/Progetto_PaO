@@ -2,14 +2,15 @@
 #define PIANETA_H
 #include "corpo_celeste.h"
 
-class Pianeta : virtual public Corpo_celeste{
+class Pianeta : public Corpo_celeste{
 protected:
     bool tipo; //true=roccioso o false=gassoso
 public:
     Pianeta(float, float, bool);
     Pianeta(Pianeta&);
     Pianeta &operator=(const Pianeta&);
-    QString get_tipo() const;
+    std::string get_tipo() const;
+    virtual QVector<std::variant<float,bool,std::string>> get_data()const override;
     virtual ~Pianeta();
 };
 

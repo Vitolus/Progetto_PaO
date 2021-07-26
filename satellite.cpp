@@ -8,11 +8,11 @@ Satellite::~Satellite(){
     delete pianetaOrbitato;
 }
 
-Satellite::Satellite(float d, float f, bool t, Pianeta& p) : Corpo_celeste(d, f), Pianeta(d, f, t){
+Satellite::Satellite(float d, float f, bool t, Pianeta& p) : Pianeta(d, f, t){
     pianetaOrbitato= new Pianeta(p);
 }
 
-Satellite::Satellite(Satellite &s) : Corpo_celeste(s), Pianeta(s){
+Satellite::Satellite(Satellite &s) : Pianeta(s){
     pianetaOrbitato= s.get_pianeta_orbitato();
 }
 

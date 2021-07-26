@@ -1,17 +1,17 @@
 #ifndef STELLA_H
 #define STELLA_H
 #include "corpo_celeste.h"
-#include <QString>
 
-class Stella : virtual public Corpo_celeste {
+class Stella : public Corpo_celeste {
     float temperatura;
-    QString colore;
+    std::string colore;
 public:
     Stella(float, float, float= 1700);
     Stella(Stella &);
     Stella &operator=(const Stella &);
     float get_temperatura() const;
-    const QString &get_colore() const;
+    const std::string &get_colore() const;
+    virtual QVector<std::variant<float,bool,std::string>> get_data() const override;
     virtual ~Stella();
 };
 
