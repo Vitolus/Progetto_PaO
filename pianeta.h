@@ -6,6 +6,7 @@ class Pianeta : public Corpo_celeste{
 protected:
     bool tipo; //true=roccioso o false=gassoso
 public:
+    Pianeta();
     Pianeta(float, float, bool);
     Pianeta(Pianeta&);
     Pianeta &operator=(const Pianeta&);

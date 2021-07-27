@@ -9,6 +9,7 @@ protected:
     bool luminoso;
 
 public:
+    Corpo_celeste();
     Corpo_celeste(float,float, bool= false);
     Corpo_celeste(Corpo_celeste&);
     Corpo_celeste &operator=(const Corpo_celeste&);

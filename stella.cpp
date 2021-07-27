@@ -20,6 +20,11 @@ QVector<std::variant<float, bool, std::string> > Stella::get_data() const{
 
 Stella::~Stella(){}
 
+Stella::Stella() : Corpo_celeste(){
+    temperatura= 0;
+    colore= "";
+}
+
 Stella::Stella(float d,float f, float t) : Corpo_celeste(d, f, true){
     temperatura= t;
     if(temperatura<=1700) colore= "rossa";

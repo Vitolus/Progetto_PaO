@@ -10,7 +10,6 @@ CONFIG += c++11
 
 SOURCES += \
     corpo_celeste.cpp \
-    deep_ptr.cpp \
     main.cpp \
     mainwindow.cpp \
     pianeta.cpp \

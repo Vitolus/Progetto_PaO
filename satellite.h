@@ -5,6 +5,7 @@
 class Satellite : public Pianeta{
     Pianeta *pianetaOrbitato;
 public:
+    Satellite();
     Satellite(float, float, bool, Pianeta&);
     Satellite(Satellite&);
     Satellite &operator=(const Satellite&);

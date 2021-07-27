@@ -15,6 +15,10 @@ QVector<std::variant<float, bool, std::string>> Pianeta::get_data() const{
 
 Pianeta::~Pianeta(){}
 
+Pianeta::Pianeta() : Corpo_celeste(){
+    tipo= true;
+}
+
 Pianeta::Pianeta(float d,float f, bool t) : Corpo_celeste(d, f, false){
     tipo= t;
 }

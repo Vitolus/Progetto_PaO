@@ -5,7 +5,12 @@ Pianeta *Satellite::get_pianeta_orbitato() const{
 }
 
 Satellite::~Satellite(){
+    pianetaOrbitato= nullptr;
     delete pianetaOrbitato;
+}
+
+Satellite::Satellite() : Pianeta(){
+    pianetaOrbitato= nullptr;
 }
 
 Satellite::Satellite(float d, float f, bool t, Pianeta& p) : Pianeta(d, f, t){

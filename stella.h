@@ -6,6 +6,7 @@ class Stella : public Corpo_celeste {
     float temperatura;
     std::string colore;
 public:
+    Stella();
     Stella(float, float, float= 1700);
     Stella(Stella &);
     Stella &operator=(const Stella &);

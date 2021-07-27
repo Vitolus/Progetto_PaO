@@ -13,6 +13,12 @@ bool Corpo_celeste::get_luminoso() const{
     return luminoso;
 }
 
+Corpo_celeste::Corpo_celeste(){
+    diametro= 0;
+    forzaGravita= 0;
+    luminoso= false;
+}
+
 Corpo_celeste::Corpo_celeste(float d, float f, bool l){
     diametro= d;
     forzaGravita= f;

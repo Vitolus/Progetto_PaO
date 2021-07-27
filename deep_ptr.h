@@ -5,36 +5,41 @@
 template <class P>
 class Deep_ptr{
     P *ptr;
+    void cleanup(){
+        if(ptr != nullptr) delete ptr;
+    }
 public:
-    Deep_ptr() : ptr(nullptr){}
+    constexpr Deep_ptr() noexcept : ptr(nullptr){}
 
-    Deep_ptr(P *v) : ptr(v){}
+    constexpr Deep_ptr(std::nullptr_t) noexcept : ptr(nullptr){}
 
-    Deep_ptr(P &v) : ptr(new P(v)){}
+    explicit Deep_ptr(P* p) noexcept: ptr(p){}
 
-    Deep_ptr(Deep_ptr &p){
-        P *temp= new P(*(p.ptr));
-        std::swap(temp, ptr);
-        delete temp;
-    }
+    Deep_ptr(const Deep_ptr & p)= delete;
 
-    Deep_ptr<P> &operator=(const Deep_ptr &p){
-        P *temp= new P(*(p.ptr));
-        std::swap(temp, ptr);
-        delete temp;
-        return *this;
-    }
-
-    P *operator->(){
-        return *ptr;
-    }
-
-    P *operator*(){
-        return *ptr;
+    Deep_ptr(Deep_ptr && p){
+        this->ptr= p.ptr;
+        p.ptr= nullptr;
     }
 
     ~Deep_ptr(){
-        delete ptr;
+        cleanup();
+    }
+
+    Deep_ptr& operator=(const Deep_ptr & p) = delete;
+
+    void operator=(Deep_ptr && p){
+        cleanup();
+        this->ptr= p.ptr;
+        p.ptr= nullptr;
+    }
+
+    P* operator->(){
+        return this->ptr;
+    }
+
+    P& operator*(){
+        return *(this->ptr);
     }
 };
 
