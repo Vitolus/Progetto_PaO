@@ -5,9 +5,6 @@
 template <class P>
 class Deep_ptr{
     P *ptr;
-    void cleanup(){
-        if(ptr != nullptr) delete ptr;
-    }
 public:
     constexpr Deep_ptr() noexcept : ptr(nullptr){}
 
@@ -15,31 +12,54 @@ public:
 
     explicit Deep_ptr(P* p) noexcept: ptr(p){}
 
-    Deep_ptr(const Deep_ptr & p)= delete;
-
-    Deep_ptr(Deep_ptr && p){
-        this->ptr= p.ptr;
+    Deep_ptr(Deep_ptr && p) noexcept{
+        ptr= p.ptr;
         p.ptr= nullptr;
     }
 
     ~Deep_ptr(){
-        cleanup();
+        if(ptr) delete ptr;
     }
 
-    Deep_ptr& operator=(const Deep_ptr & p) = delete;
-
-    void operator=(Deep_ptr && p){
-        cleanup();
-        this->ptr= p.ptr;
+    Deep_ptr &operator=(Deep_ptr && p) noexcept{
+        ptr= p.ptr;
         p.ptr= nullptr;
     }
 
-    P* operator->(){
-        return this->ptr;
+    Deep_ptr &operator=(std::nullptr_t) noexcept{
+        reset(nullptr);
     }
 
-    P& operator*(){
-        return *(this->ptr);
+    P* release() noexcept{
+        if(ptr){
+            P* temp= ptr;
+            ptr= nullptr;
+            return temp;
+        }
+    }
+
+    void reset(P* p= P()) noexcept{
+        P* old= ptr;
+        ptr= p;
+        if(old) delete old;
+    }
+
+    void swap(Deep_ptr &p) noexcept{
+        P* temp= ptr;
+        ptr= p;
+        p= temp;
+    }
+
+    P* get()const noexcept{
+        return ptr;
+    }
+
+    typename std::add_lvalue_reference<P>::type operator*()const{
+        return *ptr;
+    }
+
+    P* operator->()const noexcept{
+        return ptr;
     }
 };
 
