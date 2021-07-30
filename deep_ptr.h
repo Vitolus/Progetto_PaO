@@ -61,6 +61,15 @@ public:
     P* operator->()const noexcept{
         return ptr;
     }
+
+    static Deep_ptr dynamic_ptr_cast(Deep_ptr &p){
+        if(P* cast= dynamic_cast<P>(p.get())){
+            Deep_ptr<P> result(cast);
+            p.release();
+            return result;
+        }
+        return Deep_ptr<P>(nullptr);
+    }
 };
 
 #endif // DEEP_PTR_H

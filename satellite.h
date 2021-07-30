@@ -9,7 +9,7 @@ public:
     Satellite(float, float, bool, Pianeta&);
     Satellite(Satellite&);
     Satellite &operator=(const Satellite&);
-    Pianeta *get_pianeta_orbitato() const;
+    virtual Pianeta *get_pianeta_orbitato() const override;
     virtual ~Satellite();
 };
 

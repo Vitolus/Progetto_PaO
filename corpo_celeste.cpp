@@ -13,6 +13,22 @@ bool Corpo_celeste::get_luminoso() const{
     return luminoso;
 }
 
+float Corpo_celeste::get_temperatura() const{
+    return 0;
+}
+
+std::string Corpo_celeste::get_colore() const{
+    return "";
+}
+
+std::string Corpo_celeste::get_tipo() const{
+return "";
+}
+
+Pianeta *Corpo_celeste::get_pianeta_orbitato() const{
+    return 0;
+}
+
 Corpo_celeste::Corpo_celeste(){
     diametro= 0;
     forzaGravita= 0;

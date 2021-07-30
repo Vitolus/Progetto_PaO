@@ -22,6 +22,7 @@ HEADERS += \
     mainwindow.h \
     pianeta.h \
     satellite.h \
+    sistema_stellare.h \
     stella.h
 
 FORMS += \

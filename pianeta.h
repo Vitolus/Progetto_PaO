@@ -10,7 +10,7 @@ public:
     Pianeta(float, float, bool);
     Pianeta(Pianeta&);
     Pianeta &operator=(const Pianeta&);
-    std::string get_tipo() const;
+    virtual std::string get_tipo() const override;
     virtual QVector<std::variant<float,bool,std::string>> get_data()const override;
     virtual ~Pianeta();
 };

@@ -10,8 +10,8 @@ public:
     Stella(float, float, float= 1700);
     Stella(Stella &);
     Stella &operator=(const Stella &);
-    float get_temperatura() const;
-    const std::string &get_colore() const;
+    virtual float get_temperatura() const override;
+    virtual std::string get_colore() const override;
     virtual QVector<std::variant<float,bool,std::string>> get_data() const override;
     virtual ~Stella();
 };
