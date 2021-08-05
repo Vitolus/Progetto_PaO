@@ -5,6 +5,7 @@
 #include "pianeta.h"
 #include "satellite.h"
 #include "deep_ptr.h"
+#include "sistema_stellare.h"
 #include <iostream>
 using std::cout;
 using std::endl;
@@ -16,8 +17,11 @@ int main(int argc, char *argv[]){
     w.show();
     return a.exec();
     */
-    Deep_ptr<Corpo_celeste> p(new Stella(24,10));
-    cout<<p->get_diametro()<<endl<<p->get_forza_gravita()<<endl<<p->get_luminoso()<<endl
-       <<p->get_temperatura()<<endl<<p->get_colore()<<endl<<p->get_tipo()<<endl<<p->get_pianeta_orbitato();
+    Sistema_stellare<Deep_ptr<Corpo_celeste>> sistema1(3);
+    sistema1.push_back(Deep_ptr<Corpo_celeste>(new Stella(30,5)));
+    sistema1.push_back(Deep_ptr<Corpo_celeste>(new Pianeta(20,2,true)));
+    for(Sistema_stellare<Deep_ptr<Corpo_celeste>>::Iterator cit= sistema1.begin(); cit==sistema1.end(); cit++){
+        cout<< cit->get()<<endl;
+    }
     return 0;
 }

@@ -20,14 +20,14 @@ public:
         typedef T value_type;
         typedef T& reference;
         typedef T* pointer;
-        typedef std::forward_iterator_tag iterator_category;
+        typedef std::bidirectional_iterator_tag iterator_category;
         typedef std::ptrdiff_t difference_type;
 
-        T* ptr;
+        pointer ptr;
     public:
         Iterator(pointer p) : ptr(p){}
 
-        reference operator*() const{
+        typename std::add_lvalue_reference<T>::type operator*() const{
             return *ptr;
         }
 
@@ -46,12 +46,39 @@ public:
             return temp;
         }
 
-        bool operator==(const Iterator& it){
+        Iterator &operator--(){
+            ptr--;
+            return *this;
+        }
+
+        Iterator operator--(int){
+            Iterator temp= *this;
+            --(*this);
+            return temp;
+        }
+
+        bool operator==(const Iterator& it)const{
             return ptr == it.ptr;
         }
 
-        bool operator!=(const Iterator& it){
+        bool operator!=(const Iterator& it)const{
             return ptr != it.ptr;
+        }
+
+        bool operator<(const Iterator& it)const{
+            return ptr < it.ptr;
+        }
+
+        bool operator>(const Iterator& it)const{
+            return ptr > it.ptr;
+        }
+
+        bool operator<=(const Iterator& it)const{
+            return ptr <= it.ptr;
+        }
+
+        bool operator>=(const Iterator& it)const{
+            return ptr >= it.ptr;
         }
     };
 
@@ -59,14 +86,14 @@ public:
         typedef T value_type;
         typedef T& reference;
         typedef T* pointer;
-        typedef std::forward_iterator_tag iterator_category;
+        typedef std::bidirectional_iterator_tag iterator_category;
         typedef std::ptrdiff_t difference_type;
 
-        T* ptr;
+        value_type ptr;
     public:
         Const_iterator(pointer p) : ptr(p){}
 
-        const value_type& operator*() const{
+        const typename std::add_lvalue_reference<T>::type operator*() const{
             return *ptr;
         }
 
@@ -85,12 +112,39 @@ public:
             return temp;
         }
 
-        bool operator==(const Iterator& it){
-            return ptr == it.ptr_;
+        Iterator &operator--(){
+            ptr--;
+            return *this;
         }
 
-        bool operator!=(const Iterator& it){
-            return ptr != it.ptr_;
+        Iterator operator--(int){
+            Iterator temp= *this;
+            --(*this);
+            return temp;
+        }
+
+        bool operator==(const Const_iterator& it)const{
+            return ptr == it.ptr;
+        }
+
+        bool operator!=(const Const_iterator& it)const{
+            return ptr != it.ptr;
+        }
+
+        bool operator<(const Const_iterator& it)const{
+            return ptr < it.ptr;
+        }
+
+        bool operator>(const Const_iterator& it)const{
+            return ptr > it.ptr;
+        }
+
+        bool operator<=(const Const_iterator& it)const{
+            return ptr <= it.ptr;
+        }
+
+        bool operator>=(const Const_iterator& it)const{
+            return ptr >= it.ptr;
         }
     };
 
@@ -99,7 +153,7 @@ public:
 
     /**
      * @brief costruisce Sistema_stellare vuoto con lunghezza l
-     * @param l lunghezza
+     * @param lunghezza
      */
     explicit Sistema_stellare(size_type l) : length(l){
         assert(length>=0);
@@ -109,7 +163,7 @@ public:
 
     /**
      * @brief copy constructor
-     * @param s Sistema_stellare da copiare
+     * @param Sistema_stellare da copiare
      */
     Sistema_stellare(const Sistema_stellare &s){
         length= s.length;
@@ -120,8 +174,8 @@ public:
 
     /**
      * @brief move constructor
-     * @param s Sistema_stellare da rimpiazzare
-     *//*
+     * @param Sistema_stellare da rimpiazzare
+     */
     Sistema_stellare(Sistema_stellare &&s){
         length= s.length;
         dim= length;
@@ -129,7 +183,7 @@ public:
         s.ele= nullptr;
         s.length= 0;
         s.dim= 0;
-    }*/
+    }
 
     ~Sistema_stellare(){
         if(ele) delete [] ele;
@@ -137,7 +191,7 @@ public:
 
     /**
      * @brief copy assignment operator
-     * @param s Sistema_solare da assegnare
+     * @param Sistema_solare da assegnare
      * @return nuovo Sistema_solare (*this)
      */
     Sistema_stellare &operator=(const Sistema_stellare &s){
@@ -150,9 +204,9 @@ public:
 
     /**
      * @brief move assignment operator
-     * @param s Sistema_solare da assegnare
+     * @param Sistema_solare da assegnare
      * @return nuovo Sistema_solare (*this)
-     *//*
+     */
     Sistema_stellare &operator=(Sistema_stellare &&s){
         erase();
         length= s.length;
@@ -161,7 +215,7 @@ public:
         s.ele= nullptr;
         s.length= 0;
         s.dim= 0;
-    }*/
+    }
 
     /**
      * @brief accede all'oggetto specificato con controllo limiti
@@ -206,7 +260,7 @@ public:
      * @brief accesso diretto all'array sottostante costantemente
      * @return puntatore al primo elemento
      */
-    const pointer data() const noexcept{
+    pointer data() const noexcept{
         return ele;
     }
 
@@ -215,9 +269,13 @@ public:
       * @return iteratore al primo elemento
       */
     Iterator begin() noexcept{
-        return Iterator(&ele);
+        return Iterator(&ele[0]);
     }
-
+/*
+    Const_iterator cbegin() noexcept{
+        return Const_iterator(ele);
+    }
+*/
     /**
       * @brief ritorna un iteratore alla fine dell'array
       * @return iteratore all'elemento successivo all'ultimo
@@ -225,7 +283,11 @@ public:
     Iterator end() noexcept{
         return Iterator(&ele[dim]);
     }
-
+/*
+    Const_iterator cend() noexcept{
+        return Const_iterator(ele+dim);
+    }
+*/
     /**
       * @brief controlla se Sistema_stellare vuoto
       * @return vero se vuoto, falso altrimenti
@@ -281,22 +343,32 @@ public:
     }
 
     /**
+     * @brief muove in coda elemento v
+     * @param elemento da muovere
+     */
+    void push_back(T&& v){
+        if(dim==length) reserve(2*length+1);
+        ele[dim++]= v; // TODO fixare
+        v= nullptr;
+    }
+
+    /**
      * @brief elimina ultimo elemento di Sistema_solare
      */
     void pop_back(){
-        delete ele[dim--];
+        delete ele[--dim];
     };
 
     /**
      * @brief modifica la dimensione massima del Sistema_stellare
      * @param nuova dimensione massima
      */
-    void reserve(int newLength){
+    void reserve(size_type newLength){
         if(length==newLength) return;
         length= newLength;
         T* data= new T[length];
         dim= dim<length ? dim : length;
-        for(auto i= 0; i<dim; i++) data[i]= ele[i];
+        for(size_type i= 0; i<dim; i++) data[i]= ele[i];
         delete [] ele;
         ele= data;
     }

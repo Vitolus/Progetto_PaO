@@ -4,14 +4,24 @@
 #include "corpo_celeste.h"
 template <class P>
 class Deep_ptr{
-    P *ptr;
+    typedef std::size_t size_type;
+    typedef P value_type;
+    typedef P& reference;
+    typedef P* pointer;
+    typedef std::ptrdiff_t difference_type;
+
+    pointer ptr;
 public:
     constexpr Deep_ptr() noexcept : ptr(nullptr){}
 
     constexpr Deep_ptr(std::nullptr_t) noexcept : ptr(nullptr){}
 
-    explicit Deep_ptr(P* p) noexcept: ptr(p){}
+    explicit Deep_ptr(pointer p) noexcept: ptr(p){}
 
+    /**
+     * @brief move constructor
+     * @param p
+     */
     Deep_ptr(Deep_ptr && p) noexcept{
         ptr= p.ptr;
         p.ptr= nullptr;
@@ -21,36 +31,58 @@ public:
         if(ptr) delete ptr;
     }
 
+    /**
+     * @brief move assignment operator
+     * @param p
+     * @return nuovo Deep_ptr (*this)
+     */
     Deep_ptr &operator=(Deep_ptr && p) noexcept{
         ptr= p.ptr;
         p.ptr= nullptr;
+        return *this;
     }
 
     Deep_ptr &operator=(std::nullptr_t) noexcept{
         reset(nullptr);
     }
 
-    P* release() noexcept{
+    /**
+     * @brief annulla puntatore
+     * @return oggetto puntato
+     */
+    pointer release() noexcept{
         if(ptr){
-            P* temp= ptr;
+            pointer temp= ptr;
             ptr= nullptr;
             return temp;
         }
     }
 
-    void reset(P* p= P()) noexcept{
-        P* old= ptr;
+    /**
+     * @brief riassegna puntatore eliminando vecchio
+     * @param nuovo puntatore
+     */
+    void reset(pointer p= P()) noexcept{
+        pointer old= ptr;
         ptr= p;
         if(old) delete old;
     }
 
+    /**
+     * @brief inverte puntatori
+     * @param puntatore da invertire
+     */
     void swap(Deep_ptr &p) noexcept{
-        P* temp= ptr;
+        pointer temp= ptr;
         ptr= p;
         p= temp;
     }
 
-    P* get()const noexcept{
+    /**
+     * @brief ritorna puntatore
+     * @return puntatore oggetto
+     */
+    pointer get()const noexcept{
         return ptr;
     }
 
@@ -58,17 +90,8 @@ public:
         return *ptr;
     }
 
-    P* operator->()const noexcept{
+    pointer operator->()const noexcept{
         return ptr;
-    }
-
-    static Deep_ptr dynamic_ptr_cast(Deep_ptr &p){
-        if(P* cast= dynamic_cast<P>(p.get())){
-            Deep_ptr<P> result(cast);
-            p.release();
-            return result;
-        }
-        return Deep_ptr<P>(nullptr);
     }
 };
 
