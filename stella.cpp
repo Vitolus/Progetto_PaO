@@ -1,25 +1,5 @@
 #include "stella.h"
 
-float Stella::get_temperatura() const{
-    return temperatura;
-}
-
-std::string Stella::get_colore() const{
-    return colore;
-}
-
-QVector<std::variant<float, bool, std::string> > Stella::get_data() const{
-    QVector<std::variant<float, bool, std::string>> data;
-    data.push_back(this->get_diametro());
-    data.push_back(this->get_forza_gravita());
-    data.push_back(this->get_luminoso());
-    data.push_back(this->get_temperatura());
-    data.push_back(this->get_colore());
-    return data;
-}
-
-Stella::~Stella(){}
-
 Stella::Stella() : Corpo_celeste(), temperatura(0), colore(""){}
 
 Stella::Stella(float d,float f, float t) : Corpo_celeste(d, f, true), temperatura(t){
@@ -29,10 +9,25 @@ Stella::Stella(float d,float f, float t) : Corpo_celeste(d, f, true), temperatur
     else colore= "bianca";
 }
 
-Stella::Stella(Stella &s) : Corpo_celeste(s), temperatura(s.get_temperatura()), colore(s.get_colore()){}
+Stella::Stella(Stella& s) : Corpo_celeste(s), temperatura(s.get_temperatura()), colore(s.get_colore()){}
 
-Stella &Stella::operator=(const Stella &s){
+Stella::~Stella(){}
+
+Stella& Stella::operator=(const Stella& s){
+    Corpo_celeste::operator=(s);
     temperatura= s.get_temperatura();
     colore= s.get_colore();
     return *this;
+}
+
+float Stella::get_temperatura() const{
+    return temperatura;
+}
+
+std::string Stella::get_colore() const{
+    return colore;
+}
+
+Corpo_celeste* Stella::clone(){
+    return new Stella(*this);
 }

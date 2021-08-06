@@ -176,11 +176,7 @@ public:
      * @brief move constructor
      * @param Sistema_stellare da rimpiazzare
      */
-    Sistema_stellare(Sistema_stellare &&s){
-        length= s.length;
-        dim= length;
-        ele= s.ele;
-        s.ele= nullptr;
+    Sistema_stellare(Sistema_stellare &&s) : length(s.length), dim(s.length), ele(std::move(s.ele)){
         s.length= 0;
         s.dim= 0;
     }
@@ -200,6 +196,7 @@ public:
         dim= length;
         ele= new T[length];
         for(auto i= 0; i<length; i++) ele[i]= s.ele[i];
+        return *this;
     }
 
     /**
@@ -211,8 +208,7 @@ public:
         erase();
         length= s.length;
         dim= length;
-        ele= s.ele;
-        s.ele= nullptr;
+        ele= std::move(s.ele);
         s.length= 0;
         s.dim= 0;
     }
@@ -348,8 +344,7 @@ public:
      */
     void push_back(T&& v){
         if(dim==length) reserve(2*length+1);
-        ele[dim++]= v; // TODO fixare
-        v= nullptr;
+        ele[dim++]= std::move(v);
     }
 
     /**
@@ -368,7 +363,7 @@ public:
         length= newLength;
         T* data= new T[length];
         dim= dim<length ? dim : length;
-        for(size_type i= 0; i<dim; i++) data[i]= ele[i];
+        for(size_type i= 0; i<dim; i++) data[i]= std::move(ele[i]);
         delete [] ele;
         ele= data;
     }

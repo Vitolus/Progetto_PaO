@@ -3,14 +3,15 @@
 #include "pianeta.h"
 
 class Satellite : public Pianeta{
-    Pianeta *pianetaOrbitato;
+    const Pianeta* pianetaOrbitato;
 public:
     Satellite();
-    Satellite(float, float, bool, Pianeta&);
+    Satellite(float, float, bool,const Pianeta* const);
     Satellite(Satellite&);
-    Satellite &operator=(const Satellite&);
-    virtual Pianeta *get_pianeta_orbitato() const override;
     virtual ~Satellite();
+    Satellite& operator=(const Satellite&);
+    virtual const Pianeta* get_pianeta_orbitato() const override;
+    virtual Corpo_celeste* clone() override;
 };
 
 #endif // SATELLITE_H

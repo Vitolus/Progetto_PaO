@@ -9,10 +9,10 @@ public:
     Pianeta();
     Pianeta(float, float, bool);
     Pianeta(Pianeta&);
+    virtual ~Pianeta();
     Pianeta &operator=(const Pianeta&);
     virtual std::string get_tipo() const override;
-    virtual QVector<std::variant<float,bool,std::string>> get_data()const override;
-    virtual ~Pianeta();
+    virtual Corpo_celeste* clone() override;
 };
 
 #endif // PIANETA_H
