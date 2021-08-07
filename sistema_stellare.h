@@ -11,364 +11,378 @@ class Sistema_stellare{
     typedef T* pointer;
     typedef std::ptrdiff_t difference_type;
 
-    size_type length;
-    size_type dim;
-    pointer ele;
+    class Nodo{
+        friend class Sistema_stellare<T>;
+        value_type info;
+        Nodo* next;
+        Nodo(const value_type&, Nodo* = nullptr);
+        Nodo(const Nodo&);
+        void del();
+    };
+
+    Nodo* first, * last;
+    static Nodo* clone(Nodo*, Nodo*);
+
 public:
+    Sistema_stellare();
+    Sistema_stellare(const value_type&);
+    Sistema_stellare(const Sistema_stellare&);
+    ~Sistema_stellare();
+    Sistema_stellare& operator=(const Sistema_stellare&);
 
     class Iterator{
-        typedef T value_type;
-        typedef T& reference;
-        typedef T* pointer;
-        typedef std::bidirectional_iterator_tag iterator_category;
-        typedef std::ptrdiff_t difference_type;
+        friend Sistema_stellare<T>;
+        Nodo* ptr;
+        Iterator(Nodo*);
 
-        pointer ptr;
     public:
-        Iterator(pointer p) : ptr(p){}
-
-        typename std::add_lvalue_reference<T>::type operator*() const{
-            return *ptr;
-        }
-
-        pointer operator->(){
-            return ptr;
-        }
-
-        Iterator &operator++(){
-            ptr++;
-            return *this;
-        }
-
-        Iterator operator++(int){
-            Iterator temp= *this;
-            ++(*this);
-            return temp;
-        }
-
-        Iterator &operator--(){
-            ptr--;
-            return *this;
-        }
-
-        Iterator operator--(int){
-            Iterator temp= *this;
-            --(*this);
-            return temp;
-        }
-
-        bool operator==(const Iterator& it)const{
-            return ptr == it.ptr;
-        }
-
-        bool operator!=(const Iterator& it)const{
-            return ptr != it.ptr;
-        }
-
-        bool operator<(const Iterator& it)const{
-            return ptr < it.ptr;
-        }
-
-        bool operator>(const Iterator& it)const{
-            return ptr > it.ptr;
-        }
-
-        bool operator<=(const Iterator& it)const{
-            return ptr <= it.ptr;
-        }
-
-        bool operator>=(const Iterator& it)const{
-            return ptr >= it.ptr;
-        }
+        Iterator();
+        Iterator& operator=(const Iterator&);
+        Iterator &operator++();
+        Iterator &operator++(int);
+        Iterator &operator--();
+        Iterator &operator--(int);
+        reference operator*() const;
+        pointer operator->() const;
+        bool operator==(const Iterator&);
+        bool operator!=(const Iterator&);
+        bool operator<(const Iterator&);
+        bool operator<=(const Iterator&);
+        bool operator>(const Iterator&);
+        bool operator>=(const Iterator&);
     };
 
     class Const_iterator{
-        typedef T value_type;
-        typedef T& reference;
-        typedef T* pointer;
-        typedef std::bidirectional_iterator_tag iterator_category;
-        typedef std::ptrdiff_t difference_type;
+        friend class Sistema_stellare<T>;
+        const Nodo* ptr;
+        Const_iterator(Nodo*);
 
-        value_type ptr;
     public:
-        Const_iterator(pointer p) : ptr(p){}
-
-        const typename std::add_lvalue_reference<T>::type operator*() const{
-            return *ptr;
-        }
-
-        const value_type* operator->(){
-            return ptr;
-        }
-
-        Iterator &operator++(){
-            ptr++;
-            return *this;
-        }
-
-        Iterator operator++(int){
-            Iterator temp= *this;
-            ++(*this);
-            return temp;
-        }
-
-        Iterator &operator--(){
-            ptr--;
-            return *this;
-        }
-
-        Iterator operator--(int){
-            Iterator temp= *this;
-            --(*this);
-            return temp;
-        }
-
-        bool operator==(const Const_iterator& it)const{
-            return ptr == it.ptr;
-        }
-
-        bool operator!=(const Const_iterator& it)const{
-            return ptr != it.ptr;
-        }
-
-        bool operator<(const Const_iterator& it)const{
-            return ptr < it.ptr;
-        }
-
-        bool operator>(const Const_iterator& it)const{
-            return ptr > it.ptr;
-        }
-
-        bool operator<=(const Const_iterator& it)const{
-            return ptr <= it.ptr;
-        }
-
-        bool operator>=(const Const_iterator& it)const{
-            return ptr >= it.ptr;
-        }
+        Const_iterator();
+        Const_iterator& operator=(const Const_iterator&);
+        Const_iterator &operator++();
+        Const_iterator &operator++(int);
+        Const_iterator &operator--();
+        Const_iterator &operator--(int);
+        const value_type& operator*() const;
+        const pointer operator->() const;
+        bool operator==(const Const_iterator&);
+        bool operator!=(const Const_iterator&);
+        bool operator<(const Const_iterator&);
+        bool operator<=(const Const_iterator&);
+        bool operator>(const Const_iterator&);
+        bool operator>=(const Const_iterator&);
     };
 
-
-    Sistema_stellare() : length(), ele(nullptr){}
-
-    /**
-     * @brief costruisce Sistema_stellare vuoto con lunghezza l
-     * @param lunghezza
-     */
-    explicit Sistema_stellare(size_type l) : length(l){
-        assert(length>=0);
-        if(l>0) ele= new T[length];
-        dim= 0;
-    }
-
-    /**
-     * @brief copy constructor
-     * @param Sistema_stellare da copiare
-     */
-    Sistema_stellare(const Sistema_stellare &s){
-        length= s.length;
-        dim= length;
-        ele= new T[length];
-        for(auto i= 0; i<length; i++) ele[i]= s.ele[i];
-    }
-
-    /**
-     * @brief move constructor
-     * @param Sistema_stellare da rimpiazzare
-     */
-    Sistema_stellare(Sistema_stellare &&s) : length(s.length), dim(s.length), ele(std::move(s.ele)){
-        s.length= 0;
-        s.dim= 0;
-    }
-
-    ~Sistema_stellare(){
-        if(ele) delete [] ele;
-    }
-
-    /**
-     * @brief copy assignment operator
-     * @param Sistema_solare da assegnare
-     * @return nuovo Sistema_solare (*this)
-     */
-    Sistema_stellare &operator=(const Sistema_stellare &s){
-        erase();
-        length= s.length;
-        dim= length;
-        ele= new T[length];
-        for(auto i= 0; i<length; i++) ele[i]= s.ele[i];
-        return *this;
-    }
-
-    /**
-     * @brief move assignment operator
-     * @param Sistema_solare da assegnare
-     * @return nuovo Sistema_solare (*this)
-     */
-    Sistema_stellare &operator=(Sistema_stellare &&s){
-        erase();
-        length= s.length;
-        dim= length;
-        ele= std::move(s.ele);
-        s.length= 0;
-        s.dim= 0;
-    }
-
-    /**
-     * @brief accede all'oggetto specificato con controllo limiti
-     * @param i posizione dell'elemento
-     * @return referenza elemento richiesto
-     */
-    reference at(size_type i){
-        assert(i>=0 && i < dim);
-        return ele[i];
-    }
-
-    reference operator[](value_type i){
-        assert(i>=0 && i < dim);
-        return ele[i];
-    }
-
-    /**
-     * @brief accede al primo elemento
-     * @return referenza primo elemento
-     */
-    reference front(){
-        return ele[0];
-    }
-
-    /**
-     * @brief accede all'ultimo elemento
-     * @return referenza ultimo elemento
-     */
-    reference back(){
-        return ele[dim-1];
-    }
-
-    /**
-     * @brief accesso diretto all'array sottostante
-     * @return puntatore primo elemento
-     */
-    pointer data() noexcept{
-        return ele;
-    }
-
-    /**
-     * @brief accesso diretto all'array sottostante costantemente
-     * @return puntatore al primo elemento
-     */
-    pointer data() const noexcept{
-        return ele;
-    }
-
-    /**
-      * @brief ritorna un iteratore all'inizio dell'array
-      * @return iteratore al primo elemento
-      */
-    Iterator begin() noexcept{
-        return Iterator(&ele[0]);
-    }
-/*
-    Const_iterator cbegin() noexcept{
-        return Const_iterator(ele);
-    }
-*/
-    /**
-      * @brief ritorna un iteratore alla fine dell'array
-      * @return iteratore all'elemento successivo all'ultimo
-      */
-    Iterator end() noexcept{
-        return Iterator(&ele[dim]);
-    }
-/*
-    Const_iterator cend() noexcept{
-        return Const_iterator(ele+dim);
-    }
-*/
-    /**
-      * @brief controlla se Sistema_stellare vuoto
-      * @return vero se vuoto, falso altrimenti
-      */
-    bool empty() const noexcept{
-        return dim==0;
-    }
-
-    /**
-      * @brief ritorna dimensione occupata
-      * @return dim
-      */
-    size_type size() const noexcept {
-        return dim;
-    }
-
-    /**
-      * @brief ritorna dimensione massima
-      * @return length
-      */
-    size_type capacity() const noexcept{
-        return length;
-    }
-
-    /**
-      * @brief cancella gli elementi del Sistema_stellare lasciando invariata la dimensione massima
-      */
-    void clear() noexcept{
-        delete [] ele;
-        ele= new T[length];
-        dim= 0;
-    }
-
-    /**
-     * @brief elimina elemento in posizione pos
-     * @param indice di posizione
-     */
-    Iterator erase(Iterator pos){
-        assert(pos>=ele && pos < ele[dim]);
-        Iterator temp= pos+1;
-        delete pos;
-        dim= dim-1;
-        return temp;
-    }
-
-    /**
-     * @brief aggiunge in coda elemento v
-     * @param elemento da aggiungere
-     */
-    void push_back(const value_type& v){
-        if(dim==length) reserve(2*length+1);
-        ele[dim++]= v;
-    }
-
-    /**
-     * @brief muove in coda elemento v
-     * @param elemento da muovere
-     */
-    void push_back(T&& v){
-        if(dim==length) reserve(2*length+1);
-        ele[dim++]= std::move(v);
-    }
-
-    /**
-     * @brief elimina ultimo elemento di Sistema_solare
-     */
-    void pop_back(){
-        delete ele[--dim];
-    };
-
-    /**
-     * @brief modifica la dimensione massima del Sistema_stellare
-     * @param nuova dimensione massima
-     */
-    void reserve(size_type newLength){
-        if(length==newLength) return;
-        length= newLength;
-        T* data= new T[length];
-        dim= dim<length ? dim : length;
-        for(size_type i= 0; i<dim; i++) data[i]= std::move(ele[i]);
-        delete [] ele;
-        ele= data;
-    }
-
-
+    void add(const value_type&);
+    void replace_last(size_type, const value_type&);
+    void remove(const size_type);
+    value_type get(size_type)const;
+    size_type search(const value_type&)const;
+    void clear();
+    bool empty() const;
+    Iterator begin();
+    Iterator end();
+    Const_iterator cbegin()const;
+    Const_iterator cend()const;
 };
+
+template <class T>
+Sistema_stellare<T>::Nodo::Nodo(const value_type& t, Nodo* n) : info(t), next(n){}
+
+template <class T>
+Sistema_stellare<T>::Nodo::Nodo(const Nodo& n) : info(n.info), next(n.next){}
+
+template <class T>
+void Sistema_stellare<T>::Nodo::del(){
+    if(next) next->del();
+    delete this;
+}
+
+template <class T>
+typename Sistema_stellare<T>::Nodo* Sistema_stellare<T>::clone(Nodo* first, Nodo* last){
+    if(!first){
+        last= nullptr;
+        return nullptr;
+    }
+    Nodo* n= new Nodo(first->info, clone(first->next, last));
+    if(!first->next) last= n;
+    return n;
+}
+
+template <class T>
+Sistema_stellare<T>::Sistema_stellare() : first(nullptr), last(nullptr){}
+
+template <class T>
+Sistema_stellare<T>::Sistema_stellare(const value_type& t) : first(new Nodo(t)), last(first){}
+
+template <class T>
+Sistema_stellare<T>::Sistema_stellare(const Sistema_stellare& s) : first(clone(s.first, last)){}
+
+template <class T>
+Sistema_stellare<T>::~Sistema_stellare(){
+    if(first) first->del();
+}
+
+template <class T>
+Sistema_stellare<T>& Sistema_stellare<T>::operator=(const Sistema_stellare& s){
+    if(this != &s){
+        if(first) delete first;
+        first= clone(s.first, last);
+    }
+    return *this;
+}
+
+template<class T>
+Sistema_stellare<T>::Iterator::Iterator(Nodo* p) : ptr(p) {}
+
+template<class T>
+Sistema_stellare<T>::Iterator::Iterator() : ptr(nullptr) {}
+
+template<class T>
+typename Sistema_stellare<T>::Iterator & Sistema_stellare<T>::Iterator::operator=(const Iterator& it){
+    ptr=it.ptr;
+    return *this;
+}
+
+template<class T>
+typename Sistema_stellare<T>::Iterator& Sistema_stellare<T>::Iterator::operator++(){
+    if(ptr) ptr=ptr->next;
+    return *this;
+
+}
+template<class T>
+typename Sistema_stellare<T>::Iterator& Sistema_stellare<T>::Iterator::operator++(int){
+    Iterator aux=*this;
+    if(ptr) ptr=ptr->next;
+    return aux;
+
+}
+
+template<class T>
+typename Sistema_stellare<T>::value_type& Sistema_stellare<T>::Iterator::operator*() const{
+    return ptr->info;
+}
+
+template<class T>
+typename Sistema_stellare<T>::pointer Sistema_stellare<T>::Iterator::operator->() const
+{
+    return &(ptr->info);
+}
+
+template<class T>
+bool Sistema_stellare<T>::Iterator::operator==(const Iterator& it)
+{
+    return ptr == it.ptr;
+}
+
+template<class T>
+bool Sistema_stellare<T>::Iterator::operator!=(const Iterator& it)
+{
+    return ptr != it.ptr;
+}
+
+template<class T>
+bool Sistema_stellare<T>::Iterator::operator<(const Iterator& it){
+        return ptr < it.ptr;
+}
+
+template<class T>
+bool Sistema_stellare<T>::Iterator::operator<=(const Iterator& it){
+        return ptr <= it.ptr;
+}
+
+template<class T>
+bool Sistema_stellare<T>::Iterator::operator>(const Iterator& it){
+        return ptr > it.ptr;
+}
+
+template<class T>
+bool Sistema_stellare<T>::Iterator::operator>=(const Iterator& it){
+        return ptr >= it.ptr;
+}
+
+template<class T>
+Sistema_stellare<T>::Const_iterator::Const_iterator(Nodo * p) : ptr(p) {}
+
+template<class T>
+Sistema_stellare<T>::Const_iterator::Const_iterator() : ptr(nullptr) {}
+
+template<class T>
+typename Sistema_stellare<T>::Const_iterator & Sistema_stellare<T>::Const_iterator::operator=(const Const_iterator & cit){
+    ptr=cit.ptr;
+    return *this;
+}
+
+template<class T>
+typename Sistema_stellare<T>::Const_iterator& Sistema_stellare<T>::Const_iterator::operator++(){
+    if(ptr) ptr=ptr->next;
+    return *this;
+
+}
+template<class T>
+typename Sistema_stellare<T>::Const_iterator& Sistema_stellare<T>::Const_iterator::operator++(int){
+    Iterator aux=*this;
+    if(ptr) ptr=ptr->next;
+    return aux;
+
+}
+
+template<class T>
+const typename Sistema_stellare<T>::value_type& Sistema_stellare<T>::Const_iterator::operator*() const{
+    return ptr->info;
+}
+
+template<class T>
+const typename Sistema_stellare<T>::pointer Sistema_stellare<T>::Const_iterator::operator->() const
+{
+    return &(ptr->info);
+}
+
+template<class T>
+bool Sistema_stellare<T>::Const_iterator::operator==(const Const_iterator& cit){
+    return ptr == cit.ptr;
+}
+
+template<class T>
+bool Sistema_stellare<T>::Const_iterator::operator!=(const Const_iterator& cit){
+    return ptr != cit.ptr;
+}
+
+template<class T>
+bool Sistema_stellare<T>::Const_iterator::operator<(const Const_iterator& cit){
+        return ptr < cit.ptr;
+}
+
+template<class T>
+bool Sistema_stellare<T>::Const_iterator::operator<=(const Const_iterator& cit){
+        return ptr <= cit.ptr;
+}
+
+template<class T>
+bool Sistema_stellare<T>::Const_iterator::operator>(const Const_iterator& cit){
+        return ptr > cit.ptr;
+}
+
+template<class T>
+bool Sistema_stellare<T>::Const_iterator::operator>=(const Const_iterator& cit){
+        return ptr >= cit.ptr;
+}
+
+template<class T>
+void Sistema_stellare<T>::add(const value_type& t){
+    Nodo* corpo= new Nodo(t);
+    if(!first) first= last= corpo;
+    else if(first->info > corpo->info){
+        corpo->next= first;
+        first= corpo;
+    }else{
+        Nodo* temp= first;
+        while(temp->next && temp->next->info < corpo->info) temp= temp->next;
+        corpo->next= temp->next;
+        temp->next= corpo;
+        if(!corpo->next) last= corpo;
+    }
+}
+
+template<class T>
+void Sistema_stellare<T>::replace_last(size_type i, const value_type& corpo){
+    remove(i);
+    add(corpo);
+}
+
+template<class T>
+void Sistema_stellare<T>::remove(const size_type i){
+    if(empty()) return;
+    if(!first->next){
+        if(i==0){
+            delete first;
+            first= nullptr;
+            return;
+        }
+    }else{
+        Nodo* prec= first;
+        Nodo* corr= first->next;
+        if(i==0){
+            first= first->next;
+            prec->next= nullptr;
+            delete prec;
+            return;
+        }
+        for(size_type x=1; corr->next && x<i; ++x){
+            prec= prec->next;
+            corr=corr->next;
+        }
+        if(corr){
+            prec->next= corr->next;
+            corr->next= nullptr;
+            delete corr;
+            return;
+        }
+    }
+    return;
+}
+
+template<class T>
+typename Sistema_stellare<T>::value_type Sistema_stellare<T>::get(size_type i) const{
+    if(!first->next){
+        if(i==0) return first->info;
+    }else{
+        Nodo* corr= first->next;
+        if(i==0) return first->info;
+        for(size_type x=1; corr->next && x<i; ++x) corr= corr->next;
+        if(corr) return corr->info;
+    }
+    value_type temp;
+    return temp;
+}
+
+template<class T>
+typename  Sistema_stellare<T>::size_type Sistema_stellare<T>::search(const value_type& n) const{
+    size_type i=0;
+    Nodo* corr= first;
+    bool found= false;
+    while(!found && corr->next){
+        if(corr->info == n) found= true;
+        else{
+            corr= corr->next;
+            ++i;
+        }
+    }
+    return i;
+}
+
+template<class T>
+void Sistema_stellare<T>::clear(){
+    if(first){
+        first->del();
+        first= nullptr;
+    }
+}
+
+template<class T>
+bool Sistema_stellare<T>::empty() const{
+    return !first;
+}
+
+template<class T>
+typename Sistema_stellare<T>::Iterator Sistema_stellare<T>::begin(){
+    return Iterator(first);
+}
+
+template<class T>
+typename Sistema_stellare<T>::Iterator Sistema_stellare<T>::end(){
+    return Iterator(nullptr);
+}
+
+template<class T>
+typename Sistema_stellare<T>::Const_iterator Sistema_stellare<T>::cbegin()const{
+    return Const_iterator(first);
+}
+
+template<class T>
+typename Sistema_stellare<T>::Const_iterator Sistema_stellare<T>::cend()const{
+    return Const_iterator(nullptr);
+}
 
 #endif // SISTEMA_STELLARE_H
