@@ -6,9 +6,6 @@
 #include "satellite.h"
 #include "deep_ptr.h"
 #include "sistema_stellare.h"
-#include <iostream>
-using std::cout;
-using std::endl;
 
 int main(int argc, char *argv[]){
 
