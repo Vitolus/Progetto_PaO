@@ -1,7 +1,6 @@
 #ifndef SISTEMA_STELLARE_H
 #define SISTEMA_STELLARE_H
 #include <cassert>
-#include <QIterator>
 
 template <class T>
 class Sistema_stellare{

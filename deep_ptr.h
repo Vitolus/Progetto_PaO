@@ -1,6 +1,7 @@
 #ifndef DEEP_PTR_H
 #define DEEP_PTR_H
 #include <utility>
+
 template <class T>
 class Deep_ptr{
     typedef std::size_t size_type;
@@ -15,12 +16,13 @@ public:
     Deep_ptr(const Deep_ptr&);
     ~Deep_ptr();
     Deep_ptr& operator=(const Deep_ptr&);
-    T* operator->() const;
+    reference operator*()const;
+    pointer operator->() const;
     bool operator==(const Deep_ptr&) const;
     bool operator!=(const Deep_ptr&) const;
     bool operator>(const Deep_ptr&) const;
     bool operator<(const Deep_ptr&) const;
-    operator T*() const;
+    operator pointer() const;
 };
 
 template <class T>
@@ -39,14 +41,19 @@ Deep_ptr<T>::~Deep_ptr(){
 
 template <class T>
 Deep_ptr<T>& Deep_ptr<T>::operator=(const Deep_ptr& deep){
-    assert(this != &deep);
+    if(this==&deep) return *this;
     if(ptr) delete ptr;
     ptr = deep.ptr->clone();
     return *this;
 }
 
 template <class T>
-T* Deep_ptr<T>::operator->() const{
+typename Deep_ptr<T>::reference Deep_ptr<T>::operator*()const{
+    return *ptr;
+}
+
+template <class T>
+typename Deep_ptr<T>::pointer Deep_ptr<T>::operator->() const{
        return ptr;
 }
 
@@ -71,8 +78,7 @@ bool Deep_ptr<T>::operator>(const Deep_ptr& dptr) const{
 }
 
 template<class T>
-Deep_ptr<T>::operator T *() const
-{
+Deep_ptr<T>::operator pointer() const{
     return ptr;
 }
 
