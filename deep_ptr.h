@@ -8,7 +8,6 @@ class Deep_ptr{
     typedef T value_type;
     typedef T& reference;
     typedef T* pointer;
-    typedef std::ptrdiff_t difference_type;
 
     pointer ptr;
 public:

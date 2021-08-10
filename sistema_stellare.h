@@ -8,7 +8,6 @@ class Sistema_stellare{
     typedef T value_type;
     typedef T& reference;
     typedef T* pointer;
-    typedef std::ptrdiff_t difference_type;
 
     class Nodo{
         friend class Sistema_stellare<T>;
@@ -20,6 +19,7 @@ class Sistema_stellare{
     };
 
     Nodo* first, * last;
+    size_type nCorpi;
     static Nodo* clone(Nodo*, Nodo*);
 
 public:
@@ -39,8 +39,6 @@ public:
         Iterator& operator=(const Iterator&);
         Iterator &operator++();
         Iterator &operator++(int);
-        Iterator &operator--();
-        Iterator &operator--(int);
         reference operator*() const;
         pointer operator->() const;
         bool operator==(const Iterator&);
@@ -61,8 +59,6 @@ public:
         Const_iterator& operator=(const Const_iterator&);
         Const_iterator &operator++();
         Const_iterator &operator++(int);
-        Const_iterator &operator--();
-        Const_iterator &operator--(int);
         const value_type& operator*() const;
         const pointer operator->() const;
         bool operator==(const Const_iterator&);
@@ -74,7 +70,7 @@ public:
     };
 
     void add(const value_type&);
-    void replace_last(size_type, const value_type&);
+    void replace_last(const value_type&);
     void remove(const size_type);
     value_type get(size_type)const;
     size_type search(const value_type&)const;
@@ -110,17 +106,20 @@ typename Sistema_stellare<T>::Nodo* Sistema_stellare<T>::clone(Nodo* first, Nodo
 }
 
 template <class T>
-Sistema_stellare<T>::Sistema_stellare() : first(nullptr), last(nullptr){}
+Sistema_stellare<T>::Sistema_stellare() : first(nullptr), last(nullptr), nCorpi(0){}
 
 template <class T>
-Sistema_stellare<T>::Sistema_stellare(const value_type& t) : first(new Nodo(t)), last(first){}
+Sistema_stellare<T>::Sistema_stellare(const value_type& t) : first(new Nodo(t)), last(first), nCorpi(1){}
 
 template <class T>
-Sistema_stellare<T>::Sistema_stellare(const Sistema_stellare& s) : first(clone(s.first, last)){}
+Sistema_stellare<T>::Sistema_stellare(const Sistema_stellare& s) : first(clone(s.first, last)), nCorpi(s.nCorpi){}
 
 template <class T>
 Sistema_stellare<T>::~Sistema_stellare(){
-    if(first) first->del();
+    if(first){
+        nCorpi=0;
+        first->del();
+    }
 }
 
 template <class T>
@@ -128,6 +127,7 @@ Sistema_stellare<T>& Sistema_stellare<T>::operator=(const Sistema_stellare& s){
     if(this != &s){
         if(first) delete first;
         first= clone(s.first, last);
+        nCorpi= s.nCorpi;
     }
     return *this;
 }
@@ -272,31 +272,31 @@ template<class T>
 void Sistema_stellare<T>::add(const value_type& t){
     Nodo* corpo= new Nodo(t);
     if(!first) first= last= corpo;
-    else if(first->info > corpo->info){
-        corpo->next= first;
-        first= corpo;
-    }else{
+    else{
         Nodo* temp= first;
-        while(temp->next && temp->next->info < corpo->info) temp= temp->next;
+        while(temp->next) temp= temp->next;
         corpo->next= temp->next;
         temp->next= corpo;
         if(!corpo->next) last= corpo;
     }
+    ++nCorpi;
 }
 
 template<class T>
-void Sistema_stellare<T>::replace_last(size_type i, const value_type& corpo){
-    remove(i);
+void Sistema_stellare<T>::replace_last(const value_type& corpo){
+    remove(nCorpi);
     add(corpo);
 }
 
 template<class T>
 void Sistema_stellare<T>::remove(const size_type i){
+    assert(i<=nCorpi);
     if(empty()) return;
     if(!first->next){
         if(i==0){
             delete first;
             first= nullptr;
+            --nCorpi;
             return;
         }
     }else{
@@ -306,6 +306,7 @@ void Sistema_stellare<T>::remove(const size_type i){
             first= first->next;
             prec->next= nullptr;
             delete prec;
+            --nCorpi;
             return;
         }
         for(size_type x=1; corr->next && x<i; ++x){
@@ -316,24 +317,22 @@ void Sistema_stellare<T>::remove(const size_type i){
             prec->next= corr->next;
             corr->next= nullptr;
             delete corr;
+            --nCorpi;
             return;
         }
     }
-    return;
 }
 
 template<class T>
 typename Sistema_stellare<T>::value_type Sistema_stellare<T>::get(size_type i) const{
-    if(!first->next){
-        if(i==0) return first->info;
-    }else{
+    assert(i<=nCorpi);
+    assert(first);
+    if(i==0) return first->info;
+    if(first->next){
         Nodo* corr= first->next;
-        if(i==0) return first->info;
         for(size_type x=1; corr->next && x<i; ++x) corr= corr->next;
         if(corr) return corr->info;
     }
-    value_type temp;
-    return temp;
 }
 
 template<class T>
