@@ -15,6 +15,7 @@ public:
     Deep_ptr(const Deep_ptr&);
     ~Deep_ptr();
     Deep_ptr& operator=(const Deep_ptr&);
+    Deep_ptr& operator=(std::nullptr_t);
     reference operator*()const;
     pointer operator->() const;
     bool operator==(const Deep_ptr&) const;
@@ -43,6 +44,13 @@ Deep_ptr<T>& Deep_ptr<T>::operator=(const Deep_ptr& deep){
     if(this==&deep) return *this;
     if(ptr) delete ptr;
     ptr = deep.ptr->clone();
+    return *this;
+}
+
+template <class T>
+Deep_ptr<T>& Deep_ptr<T>::operator=(std::nullptr_t){
+    if(ptr) delete ptr;
+    ptr= nullptr;
     return *this;
 }
 
