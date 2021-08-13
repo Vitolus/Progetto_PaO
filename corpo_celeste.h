@@ -1,6 +1,6 @@
 #ifndef CORPO_CELESTE_H
 #define CORPO_CELESTE_H
-#include <QVector>
+#include <string>
 class Pianeta; /// forward declaration
 class Corpo_celeste{
 protected:

@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include "view.h"
 #include <QApplication>
 #include "corpo_celeste.h"
 #include "stella.h"
@@ -9,9 +9,8 @@
 
 int main(int argc, char *argv[]){
     QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+    View v;
+    v.show();
     return a.exec();
-
     return 0;
 }

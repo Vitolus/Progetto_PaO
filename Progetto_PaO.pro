@@ -11,22 +11,22 @@ CONFIG += c++11
 SOURCES += \
     corpo_celeste.cpp \
     main.cpp \
-    mainwindow.cpp \
     pianeta.cpp \
     satellite.cpp \
-    stella.cpp
+    stella.cpp \
+    view.cpp
 
 HEADERS += \
     corpo_celeste.h \
     deep_ptr.h \
-    mainwindow.h \
     pianeta.h \
     satellite.h \
     sistema_stellare.h \
-    stella.h
+    stella.h \
+    view.h
 
 FORMS += \
-    mainwindow.ui
+    scatch.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
