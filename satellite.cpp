@@ -4,7 +4,7 @@ Satellite::Satellite() : Pianeta(){
     pianetaOrbitato= nullptr;
 }
 
-Satellite::Satellite(float d, float f, bool t,const Pianeta* p) : Pianeta(d, f, t){
+Satellite::Satellite(QString n, float d, float f, bool t ,const Pianeta* p) : Pianeta(n, d, f, t){
     pianetaOrbitato= p;
 }
 
@@ -17,12 +17,16 @@ Satellite::~Satellite(){
 }
 
 Satellite &Satellite::operator=(const Satellite &s){
-    Corpo_celeste::operator=(s);
+    Pianeta::operator=(s);
     pianetaOrbitato= s.get_pianeta_orbitato();
     return *this;
 }
 
-const Pianeta* Satellite::get_pianeta_orbitato() const{
+bool Satellite::is_equal(const Corpo_celeste& c)const{
+    return (Pianeta::is_equal(c) && pianetaOrbitato==c.get_pianeta_orbitato());
+}
+
+const Pianeta* Satellite::get_pianeta_orbitato()const{
     return pianetaOrbitato;
 }
 

@@ -1,6 +1,7 @@
 #ifndef SISTEMA_STELLARE_H
 #define SISTEMA_STELLARE_H
 #include <cassert>
+#include <QString>
 
 template <class T>
 class Sistema_stellare{
@@ -18,6 +19,7 @@ class Sistema_stellare{
         void del();
     };
 
+    QString nome;
     Nodo* first, * last;
     size_type nCorpi;
     static Nodo* clone(Nodo*, Nodo*);
@@ -69,13 +71,15 @@ public:
         bool operator>=(const Const_iterator&);
     };
 
+    QString get_nome()const;
     void add(const value_type&);
     void replace_last(const value_type&);
     void remove(const size_type);
     value_type get(size_type)const;
     size_type search(const value_type&)const;
+    size_type search(const QString&)const;
     void clear();
-    bool empty() const;
+    bool empty()const;
     Iterator begin();
     Iterator end();
     Const_iterator cbegin()const;
@@ -106,13 +110,15 @@ typename Sistema_stellare<T>::Nodo* Sistema_stellare<T>::clone(Nodo* first, Nodo
 }
 
 template <class T>
-Sistema_stellare<T>::Sistema_stellare() : first(nullptr), last(nullptr), nCorpi(0){}
+Sistema_stellare<T>::Sistema_stellare() : nome(""), first(nullptr), last(nullptr), nCorpi(0){}
 
 template <class T>
-Sistema_stellare<T>::Sistema_stellare(const value_type& t) : first(new Nodo(t)), last(first), nCorpi(1){}
+Sistema_stellare<T>::Sistema_stellare(const value_type& t) :nome(t->get_nome()), first(new Nodo(t)), last(first), nCorpi(1){
+
+}
 
 template <class T>
-Sistema_stellare<T>::Sistema_stellare(const Sistema_stellare& s) : first(clone(s.first, last)), nCorpi(s.nCorpi){}
+Sistema_stellare<T>::Sistema_stellare(const Sistema_stellare& s) : nome(s.nome), first(clone(s.first, last)), nCorpi(s.nCorpi){}
 
 template <class T>
 Sistema_stellare<T>::~Sistema_stellare(){
@@ -128,6 +134,7 @@ Sistema_stellare<T>& Sistema_stellare<T>::operator=(const Sistema_stellare& s){
         if(first) delete first;
         first= clone(s.first, last);
         nCorpi= s.nCorpi;
+        nome=s.nome;
     }
     return *this;
 }
@@ -269,10 +276,17 @@ bool Sistema_stellare<T>::Const_iterator::operator>=(const Const_iterator& cit){
 }
 
 template<class T>
+QString Sistema_stellare<T>::get_nome()const{
+    return nome;
+}
+
+template<class T>
 void Sistema_stellare<T>::add(const value_type& t){
     Nodo* corpo= new Nodo(t);
-    if(!first) first= last= corpo;
-    else{
+    if(!first){
+        first= last= corpo;
+        nome= t->get_nome();
+    }else{
         Nodo* temp= first;
         while(temp->next) temp= temp->next;
         corpo->next= temp->next;
@@ -289,7 +303,7 @@ void Sistema_stellare<T>::replace_last(const value_type& corpo){
 }
 
 template<class T>
-void Sistema_stellare<T>::remove(const size_type i){
+void Sistema_stellare<T>::remove(const size_type i){ // con i=0 elimino la stella, di consegueza elimino tutto il sistema
     assert(i<=nCorpi);
     if(empty()) return;
     if(!first->next){
@@ -303,10 +317,7 @@ void Sistema_stellare<T>::remove(const size_type i){
         Nodo* prec= first;
         Nodo* corr= first->next;
         if(i==0){
-            first= first->next;
-            prec->next= nullptr;
-            delete prec;
-            --nCorpi;
+            clear();
             return;
         }
         for(size_type x=1; corr->next && x<i; ++x){
@@ -341,13 +352,28 @@ typename  Sistema_stellare<T>::size_type Sistema_stellare<T>::search(const value
     Nodo* corr= first;
     bool found= false;
     while(!found && corr->next){
-        if(corr->info == n) found= true;
+        if(corr->info->isEqual(*n)) found= true;
         else{
             corr= corr->next;
             ++i;
         }
     }
-    return i;
+    return found? i : -1;
+}
+
+template<class T>
+typename Sistema_stellare<T>::size_type Sistema_stellare<T>::search(const QString& s) const{
+    size_type i=0;
+    Nodo* corr= first;
+    bool found= false;
+    while(!found && corr->next){
+        if(corr->info->get_nome()==s) found= true;
+        else{
+            corr= corr->next;
+            ++i;
+        }
+    }
+    return found? i : -1;
 }
 
 template<class T>

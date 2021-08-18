@@ -4,16 +4,17 @@
 
 class Stella : public Corpo_celeste {
     float temperatura;
-    std::string colore;
+    QString colore;
 public:
     Stella();
-    Stella(float, float, float= 1700);
+    Stella(QString, float, float, float= 1700);
     Stella(Stella&);
     virtual ~Stella();
     Stella& operator=(const Stella&);
-    virtual float get_temperatura() const override;
-    virtual std::string get_colore() const override;
-    virtual Corpo_celeste* clone() override;
+    virtual bool is_equal(const Corpo_celeste&)const override;
+    virtual float get_temperatura()const override;
+    virtual QString get_colore()const override;
+    virtual Corpo_celeste* clone()override;
 };
 
 #endif // STELLA_H

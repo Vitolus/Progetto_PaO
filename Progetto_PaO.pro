@@ -9,26 +9,30 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    controller.cpp \
     corpo_celeste.cpp \
+    gui.cpp \
     main.cpp \
     pianeta.cpp \
     satellite.cpp \
-    stella.cpp \
-    view.cpp
+    stella.cpp
 
 HEADERS += \
+    controller.h \
     corpo_celeste.h \
     deep_ptr.h \
+    gui.h \
     pianeta.h \
     satellite.h \
     sistema_stellare.h \
-    stella.h \
-    view.h
+    stella.h
 
 FORMS += \
-    scatch.ui
+    gui.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES +=

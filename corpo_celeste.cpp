@@ -3,19 +3,19 @@
 Corpo_celeste::Corpo_celeste(){
     diametro= 0;
     forzaGravita= 0;
-    luminoso= false;
+    nome= "";
 }
 
-Corpo_celeste::Corpo_celeste(float d, float f, bool l){
+Corpo_celeste::Corpo_celeste(QString n, float d, float f){
     diametro= d;
     forzaGravita= f;
-    luminoso= l;
+    nome= n;
 }
 
 Corpo_celeste::Corpo_celeste(Corpo_celeste &c){
     diametro= c.get_diametro();
     forzaGravita= c.get_forza_gravita();
-    luminoso= c.get_luminoso();
+    nome= c.get_nome();
 }
 
 Corpo_celeste::~Corpo_celeste(){}
@@ -23,8 +23,16 @@ Corpo_celeste::~Corpo_celeste(){}
 Corpo_celeste& Corpo_celeste::operator=(const Corpo_celeste& c){
     diametro= c.get_diametro();
     forzaGravita= c.get_forza_gravita();
-    luminoso= c.get_luminoso();
+    nome= c.get_nome();
     return *this;
+}
+
+bool Corpo_celeste::is_equal(const Corpo_celeste& c)const{
+    return (nome==c.get_nome()&& diametro==c.get_diametro() && forzaGravita==c.get_forza_gravita());
+}
+
+QString Corpo_celeste::get_nome() const{
+    return nome;
 }
 
 float Corpo_celeste::get_diametro() const{
@@ -35,20 +43,15 @@ float Corpo_celeste::get_forza_gravita() const{
     return forzaGravita;
 }
 
-
-bool Corpo_celeste::get_luminoso() const{
-    return luminoso;
-}
-
 float Corpo_celeste::get_temperatura() const{
     return 0;
 }
 
-std::string Corpo_celeste::get_colore() const{
+QString Corpo_celeste::get_colore() const{
     return "";
 }
 
-std::string Corpo_celeste::get_tipo() const{
+QString Corpo_celeste::get_tipo() const{
 return "";
 }
 

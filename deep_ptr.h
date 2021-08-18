@@ -23,6 +23,7 @@ public:
     bool operator>(const Deep_ptr&) const;
     bool operator<(const Deep_ptr&) const;
     operator pointer() const;
+    pointer get_pointer()const;
 };
 
 template <class T>
@@ -86,6 +87,11 @@ bool Deep_ptr<T>::operator>(const Deep_ptr& dptr) const{
 
 template<class T>
 Deep_ptr<T>::operator pointer() const{
+    return ptr;
+}
+
+template<class T>
+typename Deep_ptr<T>::pointer Deep_ptr<T>::get_pointer() const{
     return ptr;
 }
 

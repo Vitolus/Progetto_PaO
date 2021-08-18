@@ -2,7 +2,7 @@
 
 Stella::Stella() : Corpo_celeste(), temperatura(0), colore(""){}
 
-Stella::Stella(float d,float f, float t) : Corpo_celeste(d, f, true), temperatura(t){
+Stella::Stella(QString n, float d,float f, float t) : Corpo_celeste(n, d, f), temperatura(t){
     if(temperatura<=1700) colore= "rossa";
     else if(temperatura<=3000) colore= "arancione";
     else if(temperatura<=6000) colore= "gialla";
@@ -20,11 +20,15 @@ Stella& Stella::operator=(const Stella& s){
     return *this;
 }
 
-float Stella::get_temperatura() const{
+bool Stella::is_equal(const Corpo_celeste& c)const{
+    return (Corpo_celeste::is_equal(c) && temperatura==c.get_temperatura() && colore==c.get_colore());
+}
+
+float Stella::get_temperatura()const{
     return temperatura;
 }
 
-std::string Stella::get_colore() const{
+QString Stella::get_colore()const{
     return colore;
 }
 

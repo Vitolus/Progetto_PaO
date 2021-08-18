@@ -7,12 +7,13 @@ protected:
     bool tipo; //true=roccioso o false=gassoso
 public:
     Pianeta();
-    Pianeta(float, float, bool);
+    Pianeta(QString, float, float, bool);
     Pianeta(Pianeta&);
     virtual ~Pianeta();
     Pianeta &operator=(const Pianeta&);
-    virtual std::string get_tipo() const override;
-    virtual Corpo_celeste* clone() override;
+    virtual bool is_equal(const Corpo_celeste&)const override;
+    virtual QString get_tipo()const override;
+    virtual Corpo_celeste* clone()override;
 };
 
 #endif // PIANETA_H
