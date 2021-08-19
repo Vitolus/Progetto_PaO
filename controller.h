@@ -9,6 +9,7 @@
 #include "stella.h"
 #include "pianeta.h"
 #include "satellite.h"
+#include <iostream>
 
 class Controller : public QObject{
     Q_OBJECT
@@ -17,10 +18,12 @@ class Controller : public QObject{
     QVector<Sistema_stellare<Deep_ptr<Corpo_celeste>>> sistemi;
 public:
     Controller();
-    Gui* get_gui();
+    void setController();
+    Gui* get_gui();  
 public slots:
     void add_Corpo(QStringList);
 signals:
+    void show_corpo(QString, Deep_ptr<Corpo_celeste>);
 };
 
 #endif // CONTROLLER_H

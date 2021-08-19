@@ -5,6 +5,7 @@
 #include <QWidget>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
+#include <iostream>
 
 class Controller;
 namespace Ui {
@@ -21,10 +22,14 @@ public:
     explicit Gui(Controller*, QWidget* parent = nullptr);
     ~Gui();
 public slots:
-    QStringList on_sSubmit_clicked();
-    QStringList on_pSubmit_clicked();
-    QStringList on_saSubmit_clicked();
-
+    void on_sSubmit_clicked();
+    void on_pSubmit_clicked();
+    void on_saSubmit_clicked();
+    void sclear();
+    void pclear();
+    void saclear();
+signals:
+    void send_data(QStringList);
 };
 
 #endif // GUI_H

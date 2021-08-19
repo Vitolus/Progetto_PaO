@@ -11,6 +11,7 @@
 int main(int argc, char *argv[]){
     QApplication a(argc, argv);
     Controller c;
+    c.setController();
     c.get_gui()->show();
     return a.exec();
     return 0;
