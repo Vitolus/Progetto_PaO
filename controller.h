@@ -2,6 +2,7 @@
 #define CONTROLLER_H
 
 #include <QObject>
+#include <QLocale>
 #include "gui.h"
 #include "sistema_stellare.h"
 #include "deep_ptr.h"

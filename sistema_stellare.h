@@ -351,7 +351,7 @@ typename  Sistema_stellare<T>::size_type Sistema_stellare<T>::search(const value
     size_type i=0;
     Nodo* corr= first;
     bool found= false;
-    while(!found && corr->next){
+    while(!found && corr){
         if(corr->info->isEqual(*n)) found= true;
         else{
             corr= corr->next;
@@ -366,7 +366,7 @@ typename Sistema_stellare<T>::size_type Sistema_stellare<T>::search(const QStrin
     size_type i=0;
     Nodo* corr= first;
     bool found= false;
-    while(!found && corr->next){
+    while(!found && corr){
         if(corr->info->get_nome()==s) found= true;
         else{
             corr= corr->next;

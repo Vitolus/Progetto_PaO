@@ -16,14 +16,11 @@ Gui *Controller::get_gui(){
 }
 
 void Controller::add_Corpo(QStringList st){
+    QLocale loc(QLocale::Italian);
     Deep_ptr<Corpo_celeste> corpo;
     if(st[0]=="Stella"){
-        QString n= st[1];
-        float d= st[2].toFloat();
-        float f= st[3].toFloat(), t= st[4].toFloat();
-        corpo= new Stella(n, d, f, t);
+        corpo= new Stella(st[1], loc.toFloat(st[2]), loc.toFloat(st[3]), loc.toFloat(st[4]));
         Sistema_stellare<Deep_ptr<Corpo_celeste>>* sistema= new Sistema_stellare<Deep_ptr<Corpo_celeste>>(corpo);
-        corpo= nullptr;
         sistemi.push_back(*sistema);
         sistema= nullptr;
 
@@ -36,26 +33,20 @@ void Controller::add_Corpo(QStringList st){
             i= it->search(st[1]);
         }
         if(i>-1){
-            corpo= new Pianeta(st[2],st[3].toFloat(),st[4].toFloat(),st[5].toFloat());
-            it->add(corpo);
+            corpo= new Pianeta(st[2],loc.toFloat(st[3]),loc.toFloat(st[4]),loc.toFloat(st[5]));
+            sistemi[i].add(corpo);
+             std::cout<<"dentro if pianeta"<<std::endl;
         }
-        corpo= nullptr;
-
-        std::cout<<"dentro if pianeta"<<std::endl;
-
     }else if(st[0]=="Satellite"){
         QVector<Sistema_stellare<Deep_ptr<Corpo_celeste>>>::Iterator it= sistemi.begin();
         auto i=0;
         for(;i==-1 && it<sistemi.end();++it);
         Deep_ptr<Corpo_celeste> po= it->get(it->search(st[6]));
         if(i>-1){
-            corpo= new Satellite(st[2],st[3].toFloat(),st[4].toFloat(),st[5].toFloat(),dynamic_cast<Pianeta*>(po.get_pointer()));
-            it->add(corpo);
+            corpo= new Satellite(st[2],loc.toFloat(st[3]),loc.toFloat(st[4]),loc.toFloat(st[5]),dynamic_cast<Pianeta*>(po.get_pointer()));
+            sistemi[i].add(corpo);
+            std::cout<<"dentro if satellite"<<std::endl;
         }
-        corpo= nullptr;
-
-        std::cout<<"dentro if satellite"<<std::endl;
-
     }
 
     std::cout<<"fuori if add corpo"<<std::endl;
