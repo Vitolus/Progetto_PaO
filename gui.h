@@ -27,8 +27,9 @@ public slots:
     void sclear();
     void pclear();
     void saclear();
+    void add_data(const QStringList&);
 signals:
-    void send_data(QStringList);
+    void send_data(const QStringList&);
 };
 
 #endif // GUI_H

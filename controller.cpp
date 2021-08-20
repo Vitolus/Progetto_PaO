@@ -9,6 +9,7 @@ void Controller::setController(){
     connect(gui, &Gui::send_data, gui, &Gui::sclear);
     connect(gui, &Gui::send_data, gui, &Gui::pclear);
     connect(gui, &Gui::send_data, gui, &Gui::saclear);
+    connect(this, &Controller::show_corpo, gui, &Gui::add_data);
 
 }
 
@@ -44,8 +45,7 @@ void Controller::add_Corpo(const QStringList& st){
         if(i>-1){
             corpo= new Satellite(st[2],loc.toFloat(st[3]),loc.toFloat(st[4]),loc.toFloat(st[5]),dynamic_cast<Pianeta*>(po.get_pointer()));
             sistemi[i].add(corpo);
-            std::cout<<"dentro if satellite"<<std::endl;
         }
     }
-    emit show_corpo(st[0], corpo);
+    emit show_corpo(st);
 }

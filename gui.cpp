@@ -58,3 +58,7 @@ void Gui::saclear(){
     ui->saForzaBox->clear();
     ui->saOrbitatoBox->clear();
 }
+
+void Gui::add_data(const QStringList &){
+    //TODO metodo che aggiurno il database view
+}
