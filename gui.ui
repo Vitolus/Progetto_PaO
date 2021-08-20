@@ -23,7 +23,7 @@
       <enum>QTabWidget::Triangular</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="FormDati">
       <property name="toolTip">
@@ -378,7 +378,7 @@
         <widget class="QTreeWidget" name="treeWidget">
          <column>
           <property name="text">
-           <string>Corpo Celeste</string>
+           <string>Sistema stellare</string>
           </property>
          </column>
          <column>

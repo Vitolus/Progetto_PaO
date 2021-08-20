@@ -5,7 +5,6 @@
 #include <QWidget>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
-#include <iostream>
 
 class Controller;
 namespace Ui {

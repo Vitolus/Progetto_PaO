@@ -6,16 +6,17 @@ Controller::Controller(){
 
 void Controller::setController(){
     connect(gui, &Gui::send_data, this, &Controller::add_Corpo);
-    //connect(gui, &Gui::send_data, gui, &Gui::sclear);
-    //connect(gui, &Gui::send_data, gui, &Gui::pclear);
-    //connect(gui, &Gui::send_data, gui, &Gui::saclear);
+    connect(gui, &Gui::send_data, gui, &Gui::sclear);
+    connect(gui, &Gui::send_data, gui, &Gui::pclear);
+    connect(gui, &Gui::send_data, gui, &Gui::saclear);
+
 }
 
 Gui *Controller::get_gui(){
     return gui;
 }
 
-void Controller::add_Corpo(QStringList st){
+void Controller::add_Corpo(const QStringList& st){
     QLocale loc(QLocale::Italian);
     Deep_ptr<Corpo_celeste> corpo;
     if(st[0]=="Stella"){
@@ -23,8 +24,6 @@ void Controller::add_Corpo(QStringList st){
         Sistema_stellare<Deep_ptr<Corpo_celeste>>* sistema= new Sistema_stellare<Deep_ptr<Corpo_celeste>>(corpo);
         sistemi.push_back(*sistema);
         sistema= nullptr;
-
-        std::cout<<"dentro if stella"<<std::endl;
 
     }else if(st[0]=="Pianeta"){
         QVector<Sistema_stellare<Deep_ptr<Corpo_celeste>>>::Iterator it= sistemi.begin();
@@ -35,8 +34,8 @@ void Controller::add_Corpo(QStringList st){
         if(i>-1){
             corpo= new Pianeta(st[2],loc.toFloat(st[3]),loc.toFloat(st[4]),loc.toFloat(st[5]));
             sistemi[i].add(corpo);
-             std::cout<<"dentro if pianeta"<<std::endl;
         }
+
     }else if(st[0]=="Satellite"){
         QVector<Sistema_stellare<Deep_ptr<Corpo_celeste>>>::Iterator it= sistemi.begin();
         auto i=0;
@@ -48,8 +47,5 @@ void Controller::add_Corpo(QStringList st){
             std::cout<<"dentro if satellite"<<std::endl;
         }
     }
-
-    std::cout<<"fuori if add corpo"<<std::endl;
-
     emit show_corpo(st[0], corpo);
 }
