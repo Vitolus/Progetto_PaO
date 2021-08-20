@@ -13,7 +13,6 @@ SOURCES += \
     corpo_celeste.cpp \
     gui.cpp \
     main.cpp \
-    model.cpp \
     pianeta.cpp \
     satellite.cpp \
     stella.cpp
@@ -23,7 +22,6 @@ HEADERS += \
     corpo_celeste.h \
     deep_ptr.h \
     gui.h \
-    model.h \
     pianeta.h \
     satellite.h \
     sistema_stellare.h \

@@ -4,13 +4,18 @@
 #include <QObject>
 #include <QLocale>
 #include "gui.h"
-#include "model.h"
+#include "sistema_stellare.h"
+#include "corpo_celeste.h"
+#include "deep_ptr.h"
+#include "stella.h"
+#include "pianeta.h"
+#include "satellite.h"
 
 class Controller : public QObject{
     Q_OBJECT
 
     Gui* gui;
-    Model model;
+    QVector<Sistema_stellare<Deep_ptr<Corpo_celeste>>> sistemi;
 public:
     Controller();
     void setController();
