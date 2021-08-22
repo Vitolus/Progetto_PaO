@@ -25,27 +25,45 @@ void Controller::add_Corpo(const QStringList& st){
         Sistema_stellare<Deep_ptr<Corpo_celeste>>* sistema= new Sistema_stellare<Deep_ptr<Corpo_celeste>>(corpo);
         sistemi.push_back(*sistema);
         sistema= nullptr;
+        emit show_corpo(new Deep_ptr<Corpo_celeste>(corpo));
 
     }else if(st[0]=="Pianeta"){
-        QVector<Sistema_stellare<Deep_ptr<Corpo_celeste>>>::Iterator it= sistemi.begin();
-        auto i=-1;
-        for(; i==-1 && it<sistemi.end();++it){
+        auto i=-1, nSistema= -1;
+        QVector<Sistema_stellare<Deep_ptr<Corpo_celeste>>>::iterator it= sistemi.begin();
+        for(; i==-1 && it<sistemi.end(); ++it){
             i= it->search(st[1]);
+            ++nSistema;
         }
         if(i>-1){
-            corpo= new Pianeta(st[2],loc.toFloat(st[3]),loc.toFloat(st[4]),loc.toFloat(st[5]));
-            sistemi[i].add(corpo);
+            --it;
+            bool tipo= true;
+            if(st[5]=="roccioso") tipo= true;
+            else if(st[5]=="gassoso") tipo= false;
+            corpo= new Pianeta(st[2],loc.toFloat(st[3]),loc.toFloat(st[4]),tipo);
+            it->add(corpo);
+            emit show_corpo(new Deep_ptr<Corpo_celeste>(corpo), nSistema);
         }
 
     }else if(st[0]=="Satellite"){
-        QVector<Sistema_stellare<Deep_ptr<Corpo_celeste>>>::Iterator it= sistemi.begin();
-        auto i=0;
-        for(;i==-1 && it<sistemi.end();++it);
-        Deep_ptr<Corpo_celeste> po= it->get(it->search(st[6]));
+        auto i=-1, nSistema= -1;
+        QVector<Sistema_stellare<Deep_ptr<Corpo_celeste>>>::iterator it= sistemi.begin();
+        for(; i==-1 && it<sistemi.end();++it){
+            i= it->search(st[1]);
+            ++nSistema;
+        }
+        --it;
         if(i>-1){
-            corpo= new Satellite(st[2],loc.toFloat(st[3]),loc.toFloat(st[4]),loc.toFloat(st[5]),dynamic_cast<Pianeta*>(po.get_pointer()));
-            sistemi[i].add(corpo);
+            auto j= -1;
+            j= it->search(st[6]);
+            if(j>-1){
+                Deep_ptr<Corpo_celeste> po= it->get(j);
+                bool tipo= true;
+                if(st[5]=="roccioso") tipo= true;
+                else if(st[5]=="gassoso") tipo= false;
+                corpo= new Satellite(st[2],loc.toFloat(st[3]),loc.toFloat(st[4]),tipo,dynamic_cast<Pianeta*>(po.get_pointer()));
+                it->add(corpo);
+                emit show_corpo(new Deep_ptr<Corpo_celeste>(corpo), nSistema);
+            }
         }
     }
-    emit show_corpo(st);
 }

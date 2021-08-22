@@ -23,6 +23,7 @@ public:
     virtual QString get_tipo()const;
     virtual const Pianeta* get_pianeta_orbitato()const;
     virtual Corpo_celeste* clone()= 0;
+    virtual QString type_name()const = 0;
 };
 
 #endif // CORPO_CELESTE_H

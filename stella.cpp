@@ -35,3 +35,7 @@ QString Stella::get_colore()const{
 Corpo_celeste* Stella::clone(){
     return new Stella(*this);
 }
+
+QString Stella::type_name() const{
+    return "Stella";
+}

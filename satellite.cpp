@@ -33,3 +33,7 @@ const Pianeta* Satellite::get_pianeta_orbitato()const{
 Corpo_celeste* Satellite::clone(){
     return new Satellite(*this);
 }
+
+QString Satellite::type_name() const{
+    return "Satellite";
+}

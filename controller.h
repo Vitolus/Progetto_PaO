@@ -23,7 +23,7 @@ public:
 public slots:
     void add_Corpo(const QStringList&);
 signals:
-    void show_corpo(const QStringList&);
+    void show_corpo(const Deep_ptr<Corpo_celeste>*, int= 0);
 };
 
 #endif // CONTROLLER_H

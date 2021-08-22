@@ -15,6 +15,7 @@ public:
     virtual float get_temperatura()const override;
     virtual QString get_colore()const override;
     virtual Corpo_celeste* clone()override;
+    virtual QString type_name()const override;
 };
 
 #endif // STELLA_H

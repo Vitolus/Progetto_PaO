@@ -29,3 +29,7 @@ QString Pianeta::get_tipo()const{
 Corpo_celeste* Pianeta::clone(){
     return new Pianeta(*this);
 }
+
+QString Pianeta::type_name() const{
+    return "Pianeta";
+}

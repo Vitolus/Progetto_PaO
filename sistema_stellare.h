@@ -21,7 +21,7 @@ class Sistema_stellare{
 
     QString nome;
     Nodo* first, * last;
-    size_type nCorpi;
+    int nCorpi;
     static Nodo* clone(Nodo*, Nodo*);
 
 public:
@@ -320,7 +320,7 @@ void Sistema_stellare<T>::remove(const size_type i){ // con i=0 elimino la stell
             clear();
             return;
         }
-        for(size_type x=1; corr->next && x<i; ++x){
+        for(auto x=1; corr->next && x<i; ++x){
             prec= prec->next;
             corr=corr->next;
         }
@@ -341,14 +341,14 @@ typename Sistema_stellare<T>::value_type Sistema_stellare<T>::get(size_type i) c
     if(i==0) return first->info;
     if(first->next){
         Nodo* corr= first->next;
-        for(size_type x=1; corr->next && x<i; ++x) corr= corr->next;
+        for(auto x=1; corr->next && x<i; ++x) corr= corr->next;
         if(corr) return corr->info;
     }
 }
 
 template<class T>
 typename  Sistema_stellare<T>::size_type Sistema_stellare<T>::search(const value_type& n) const{
-    size_type i=0;
+    auto i=0;
     Nodo* corr= first;
     bool found= false;
     while(!found && corr){
@@ -363,7 +363,7 @@ typename  Sistema_stellare<T>::size_type Sistema_stellare<T>::search(const value
 
 template<class T>
 typename Sistema_stellare<T>::size_type Sistema_stellare<T>::search(const QString& s) const{
-    size_type i=0;
+    auto i=0;
     Nodo* corr= first;
     bool found= false;
     while(!found && corr){

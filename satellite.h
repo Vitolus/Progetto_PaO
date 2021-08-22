@@ -13,6 +13,7 @@ public:
     virtual bool is_equal(const Corpo_celeste&)const override;
     virtual const Pianeta* get_pianeta_orbitato() const override;
     virtual Corpo_celeste* clone() override;
+    virtual QString type_name()const override;
 };
 
 #endif // SATELLITE_H

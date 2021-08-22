@@ -5,6 +5,8 @@
 #include <QWidget>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
+#include "deep_ptr.h"
+#include "corpo_celeste.h"
 
 class Controller;
 namespace Ui {
@@ -15,7 +17,6 @@ class Gui : public QWidget{
 
     Ui::Gui* ui;
     QTreeWidget* tree;
-    QTreeWidgetItem* sistemi;
     Controller* controller;
 public:
     explicit Gui(Controller*, QWidget* parent = nullptr);
@@ -27,7 +28,7 @@ public slots:
     void sclear();
     void pclear();
     void saclear();
-    void add_data(const QStringList&);
+    void add_data(const Deep_ptr<Corpo_celeste>*,int= 0);
 signals:
     void send_data(const QStringList&);
 };
