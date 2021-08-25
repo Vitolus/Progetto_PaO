@@ -23,7 +23,7 @@
       <enum>QTabWidget::Triangular</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="FormDati">
       <property name="toolTip">
@@ -59,6 +59,9 @@
                  <widget class="QDoubleSpinBox" name="sTemperaturaBox">
                   <property name="buttonSymbols">
                    <enum>QAbstractSpinBox::NoButtons</enum>
+                  </property>
+                  <property name="minimum">
+                   <double>1700.000000000000000</double>
                   </property>
                   <property name="maximum">
                    <double>1000000.000000000000000</double>
