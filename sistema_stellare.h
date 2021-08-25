@@ -4,33 +4,80 @@
 #include <QString>
 
 template <class T>
+/*!
+ * \brief La classe Sistema_stellare gestice un lista di Corpi_celesti
+ */
 class Sistema_stellare{
-    typedef std::size_t size_type;
+    typedef int size_type;
     typedef T value_type;
     typedef T& reference;
     typedef T* pointer;
-
+    /*!
+     * \brief La classe Nodo immagazzina un elemento del Sistema_stellare
+     */
     class Nodo{
         friend class Sistema_stellare<T>;
-        value_type info;
-        Nodo* next;
+        value_type info; //!<info Contiene un oggetto di tipo T
+        Nodo* next; //!<next Puntatore al prossimo nodo della lista
+
+        /*!
+         * \brief Costruttore di Nodo
+         */
         Nodo(const value_type&, Nodo* = nullptr);
+
+        /*!
+         * \brief Costruttore di copia di Nodo
+         */
         Nodo(const Nodo&);
+
+        /*!
+         * \brief Distrugge ricorsivamente la lista
+         */
         void del();
     };
 
-    QString nome;
-    Nodo* first, * last;
-    int nCorpi;
+    QString nome;//!<nome Nome del Sistema_stellare, ovvero nome della stella
+    Nodo* first, //!<first Primo Nodo della lista
+    * last; //!<last Ultimo Nodo della Lista
+    int nCorpi; //!<nCorpi Numero di Corpi_celesti nel Sistema_solare (usato come se fosse l'indice di posizione di un array: 0 = un Nodo)
+
+    /*!
+     * \brief Ritorna ricorsivamente una nuova copia del Nodo oggetto di invocazione, costruendo una nuova lista
+     * \return puntatore al primo Nodo di una nuova lista
+     */
     static Nodo* clone(Nodo*, Nodo*);
 
 public:
+
+    /*!
+     * \brief Costruttore di default
+     */
     Sistema_stellare();
+
+    /*!
+     * \brief Costruttore di Sistema_solare
+     */
     Sistema_stellare(const value_type&);
+
+    /*!
+     * \brief Costruttore di copia profonda
+     */
     Sistema_stellare(const Sistema_stellare&);
+
+    /*!
+     * \brief Distruttore profondo
+     */
     ~Sistema_stellare();
+
+    /*!
+     * \brief Operatore di assegnazione di copia profonda
+     * \return
+     */
     Sistema_stellare& operator=(const Sistema_stellare&);
 
+    /*!
+     * \brief La classe Iterator crea un forward iterator sul Sistema_stellare
+     */
     class Iterator{
         friend Sistema_stellare<T>;
         Nodo* ptr;
@@ -51,6 +98,9 @@ public:
         bool operator>=(const Iterator&);
     };
 
+    /*!
+     * \brief La classe Const_iterator crea un forward const iterator sul Sistema_stellare
+     */
     class Const_iterator{
         friend class Sistema_stellare<T>;
         const Nodo* ptr;
@@ -71,18 +121,73 @@ public:
         bool operator>=(const Const_iterator&);
     };
 
+    /*!
+     * \brief Ritorna nome del Sistema_stellare
+     * \return nome
+     */
     QString get_nome()const;
+
+    /*!
+     * \brief Aggiunge un Corpo_celeste in coda al Sistema_stellare
+     */
     void add(const value_type&);
-    void replace_last(const value_type&);
+
+    /*!
+     * \brief Rimuove un Corpo_celeste dal Sistema_stellare, ma con i=0 elimino la stella, di consegueza elimino tutto il sistema
+     */
     void remove(const size_type);
-    value_type get(size_type)const;
+
+    /*!
+     * \brief Ritorna un Corpo_celeste per referenza facente parte del Sistema_stellare
+     * \return Nodo->info
+     */
+    reference get(size_type)const;
+
+    /*!
+     * \brief Ritorna l'indice di posizione del Corpo_celeste ricercato oppure -1
+     * \return posizione nella lista
+     */
     size_type search(const value_type&)const;
+
+    /*!
+     * \brief Ritorna l'indice di posizione del Corpo_celeste ricercato tramite nome oppure -1
+     * \return posizione nella lista
+     */
     size_type search(const QString&)const;
+
+    /*!
+     * \brief Svuota la lista impostando il primo elemento a nullptr
+     */
     void clear();
+
+    /*!
+     * \brief Verifica che il Sistema_stellare sia vuoto
+     * \return true se vuoto, false altrimenti
+     */
     bool empty()const;
+
+    /*!
+     * \brief Ritorna un iteratore al primo elemento del Sistema_stellare
+     * \return iteratore a first
+     */
     Iterator begin();
+
+    /*!
+     * \brief Ritorna un iteratore alla cella di memoria dopo l'ultimo elemento del Sistema_stellare
+     * \return iteratore a last+1
+     */
     Iterator end();
+
+    /*!
+     * \brief Ritorna un iteratore costante al primo elemento del Sistema_stellare
+     * \return iteratore a first
+     */
     Const_iterator cbegin()const;
+
+    /*!
+     * \brief Ritorna un iteratore costante alla cella di memoria dopo l'ultimo elemento del Sistema_stellare
+     * \return iteratore a last+1
+     */
     Const_iterator cend()const;
 };
 
@@ -110,10 +215,10 @@ typename Sistema_stellare<T>::Nodo* Sistema_stellare<T>::clone(Nodo* first, Nodo
 }
 
 template <class T>
-Sistema_stellare<T>::Sistema_stellare() : nome(""), first(nullptr), last(nullptr), nCorpi(0){}
+Sistema_stellare<T>::Sistema_stellare() : nome(""), first(nullptr), last(nullptr), nCorpi(-1){}
 
 template <class T>
-Sistema_stellare<T>::Sistema_stellare(const value_type& t) :nome(t->get_nome()), first(new Nodo(t)), last(first), nCorpi(1){
+Sistema_stellare<T>::Sistema_stellare(const value_type& t) :nome(t->get_nome()), first(new Nodo(t)), last(first), nCorpi(0){
 
 }
 
@@ -123,7 +228,7 @@ Sistema_stellare<T>::Sistema_stellare(const Sistema_stellare& s) : nome(s.nome),
 template <class T>
 Sistema_stellare<T>::~Sistema_stellare(){
     if(first){
-        nCorpi=0;
+        nCorpi=-1;
         first->del();
     }
 }
@@ -297,13 +402,7 @@ void Sistema_stellare<T>::add(const value_type& t){
 }
 
 template<class T>
-void Sistema_stellare<T>::replace_last(const value_type& corpo){
-    remove(nCorpi);
-    add(corpo);
-}
-
-template<class T>
-void Sistema_stellare<T>::remove(const size_type i){ // con i=0 elimino la stella, di consegueza elimino tutto il sistema
+void Sistema_stellare<T>::remove(const size_type i){
     assert(i<=nCorpi);
     if(empty()) return;
     if(!first->next){
@@ -335,7 +434,7 @@ void Sistema_stellare<T>::remove(const size_type i){ // con i=0 elimino la stell
 }
 
 template<class T>
-typename Sistema_stellare<T>::value_type Sistema_stellare<T>::get(size_type i) const{
+typename Sistema_stellare<T>::reference Sistema_stellare<T>::get(size_type i) const{
     assert(i<=nCorpi);
     assert(first);
     if(i==0) return first->info;

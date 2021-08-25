@@ -3,10 +3,11 @@
 Stella::Stella() : Corpo_celeste(), temperatura(0), colore(""){}
 
 Stella::Stella(QString n, float d,float f, float t) : Corpo_celeste(n, d, f), temperatura(t){
-    if(temperatura<=1700) colore= "rossa";
-    else if(temperatura<=3000) colore= "arancione";
-    else if(temperatura<=6000) colore= "gialla";
-    else colore= "bianca";
+    if(temperatura>=9000) colore= "azzurra";
+    else if(temperatura>=6000) colore= "bianca";
+    else if(temperatura>=4600) colore= "gialla";
+    else if(temperatura>=3200) colore= "arancione";
+    else colore= "rossa";
 }
 
 Stella::Stella(Stella& s) : Corpo_celeste(s), temperatura(s.get_temperatura()), colore(s.get_colore()){}

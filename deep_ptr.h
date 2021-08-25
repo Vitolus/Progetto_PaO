@@ -3,26 +3,105 @@
 #include <utility>
 
 template <class T>
+/*!
+ * \brief La classe Deep_ptr implementa un template di puntatore polimorfo di un oggetto di tipo T
+ * \author Davide Vitagliano
+ * \date Agosto 2021
+ * \version v1
+ */
 class Deep_ptr{
     typedef std::size_t size_type;
     typedef T value_type;
     typedef T& reference;
     typedef T* pointer;
 
-    pointer ptr;
+    pointer ptr;//!<ptr Puntatore all'oggetto di tipo T
 public:
+
+    /*!
+     * \brief Costruttore di Deep_ptr
+     */
     Deep_ptr(pointer =nullptr);
+
+    /*!
+     * \brief Costruttore di copia profonda
+     */
     Deep_ptr(const Deep_ptr&);
+
+    /*!
+     * \brief Distruttore profondo
+     */
     ~Deep_ptr();
+
+    /*!
+     * \brief Operatore di assegnazione di copia profonda
+     * \return oggetto di invocazione
+     */
     Deep_ptr& operator=(const Deep_ptr&);
+
+    /*!
+     * \brief Operatore di assegnazione di nullptr
+     * \return oggetto di invocazione
+     */
     Deep_ptr& operator=(std::nullptr_t);
+
+    /*!
+     * \brief Operatore di deferenziazione
+     * \return referenza all'oggetto puntato dall'oggetto di invocazione
+     */
     reference operator*()const;
+
+    /*!
+     * \brief Operatore di freccia
+     * \return puntatore (deferenziato) all'oggetto di invocazione
+     */
     pointer operator->() const;
+
+    /*!
+     * \brief Operatore di uguaglianza
+     * \return true se uguali, false altrimenti
+     */
     bool operator==(const Deep_ptr&) const;
+
+    /*!
+     * \brief Operatore di disuguaglianza
+     * \return true se diversi, false altrimenti
+     */
     bool operator!=(const Deep_ptr&) const;
+
+    /*!
+     * \brief Operatore di maggioranza
+     * \return true se maggiore, false altrimenti
+     */
     bool operator>(const Deep_ptr&) const;
+
+    /*!
+     * \brief Operatore di maggioranza o uguaglianza
+     * \return true se maggiore o uguale, false altrimenti
+     */
+    bool operator>=(const Deep_ptr&) const;
+
+    /*!
+     * \brief Operatore di minoranza
+     * \return true se minore, false altrimenti
+     */
     bool operator<(const Deep_ptr&) const;
+
+    /*!
+     * \brief Operatore di minoranza o uguaglianza
+     * \return true se minore o uguale, false altrimenti
+     */
+    bool operator<=(const Deep_ptr&) const;
+
+    /*!
+     * \brief Operatore di conversione di tipo
+     */
     operator pointer() const;
+
+    /*!
+     * \brief Ritorna il puntatore di Deep_ptr
+     * \return ptr
+     */
     pointer get_pointer()const;
 };
 

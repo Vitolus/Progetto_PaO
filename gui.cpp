@@ -32,6 +32,24 @@ void Gui::on_saSubmit_clicked(){
     emit send_data(dati);
 }
 
+void Gui::on_treeWidget_itemDoubleClicked(QTreeWidgetItem *item, int column){
+    if(column==2){
+        QString sistema, corpo;
+        if(item->text(0)!="Sistema"){
+            if(item->text(0)=="Stella"){
+                sistema= item->text(1);
+                delete tree->topLevelItem(tree->indexOfTopLevelItem(item->parent()));
+                emit notify_remove(sistema, sistema);
+            }else{
+                sistema= item->parent()->text(1);
+                corpo= item->text(1);
+                delete item;
+                emit notify_remove(sistema, corpo);
+            }
+        }
+    }else return;
+}
+
 void Gui::sclear(){
     ui->sNomeBox->clear();
     ui->sDiametroBox->clear();
@@ -54,73 +72,75 @@ void Gui::saclear(){
     ui->saOrbitatoBox->clear();
 }
 
-void Gui::add_data(const Deep_ptr<Corpo_celeste>* corpo, int nSistema){
-    if(corpo->get_pointer()->type_name() =="Stella"){
+void Gui::add_data(const Deep_ptr<Corpo_celeste> corpo, int nSistema){
+    if(corpo->type_name() =="Stella"){
         QTreeWidgetItem* sistema= new QTreeWidgetItem(tree), * stella= new QTreeWidgetItem();
         sistema->setText(0, "Sistema");
-        sistema->setText(1,corpo->get_pointer()->get_nome());
+        sistema->setText(1,corpo->get_nome());
         tree->addTopLevelItem(sistema);
 
         stella->setText(0, "Stella");
-        stella->setText(1, corpo->get_pointer()->get_nome());
+        stella->setText(1, corpo->get_nome());
+        stella->setText(2,"ELIMINA");
         sistema->addChild(stella);
         QTreeWidgetItem* dato= new QTreeWidgetItem();
         dato->setText(0,"Diametro");
-        dato->setText(1, QString::number(corpo->get_pointer()->get_diametro()));
+        dato->setText(1, QString::number(corpo->get_diametro()));
         stella->addChild(dato);
         dato= new QTreeWidgetItem();
         dato->setText(0,"Forza di Gravità");
-        dato->setText(1, QString::number(corpo->get_pointer()->get_forza_gravita()));
+        dato->setText(1, QString::number(corpo->get_forza_gravita()));
         stella->addChild(dato);
         dato= new QTreeWidgetItem();
         dato->setText(0,"Temperatura");
-        dato->setText(1, QString::number(corpo->get_pointer()->get_temperatura()));
+        dato->setText(1, QString::number(corpo->get_temperatura()));
         stella->addChild(dato);
         dato= new QTreeWidgetItem();
         dato->setText(0,"Colore");
-        dato->setText(1, corpo->get_pointer()->get_colore());
+        dato->setText(1, corpo->get_colore());
         stella->addChild(dato);
 
-    }else if(corpo->get_pointer()->type_name()=="Pianeta"){
+    }else if(corpo->type_name()=="Pianeta"){
         QTreeWidgetItem* pianeta= new QTreeWidgetItem();
         pianeta->setText(0, "Pianeta");
-        pianeta->setText(1, corpo->get_pointer()->get_nome());
+        pianeta->setText(1, corpo->get_nome());
+        pianeta->setText(2,"ELIMINA");
         tree->topLevelItem(nSistema)->addChild(pianeta);
         QTreeWidgetItem* dato= new QTreeWidgetItem();
         dato->setText(0,"Diametro");
-        dato->setText(1, QString::number(corpo->get_pointer()->get_diametro()));
+        dato->setText(1, QString::number(corpo->get_diametro()));
         pianeta->addChild(dato);
         dato= new QTreeWidgetItem();
         dato->setText(0,"Forza di Gravità");
-        dato->setText(1, QString::number(corpo->get_pointer()->get_forza_gravita()));
+        dato->setText(1, QString::number(corpo->get_forza_gravita()));
         pianeta->addChild(dato);
         dato= new QTreeWidgetItem();
         dato->setText(0,"Tipo");
-        dato->setText(1, corpo->get_pointer()->get_tipo());
+        dato->setText(1, corpo->get_tipo());
         pianeta->addChild(dato);
 
-    }else if(corpo->get_pointer()->type_name()=="Satellite"){
-        QTreeWidgetItem* pianeta= new QTreeWidgetItem();
-        pianeta->setText(0, "Satellite");
-        pianeta->setText(1, corpo->get_pointer()->get_nome());
-        tree->topLevelItem(nSistema)->addChild(pianeta);
-
+    }else if(corpo->type_name()=="Satellite"){
+        QTreeWidgetItem* satellite= new QTreeWidgetItem();
+        satellite->setText(0, "Satellite");
+        satellite->setText(1, corpo->get_nome());
+        satellite->setText(2,"ELIMINA");
+        tree->topLevelItem(nSistema)->addChild(satellite);
         QTreeWidgetItem* dato= new QTreeWidgetItem();
         dato->setText(0,"Diametro");
-        dato->setText(1, QString::number(corpo->get_pointer()->get_diametro()));
-        pianeta->addChild(dato);
+        dato->setText(1, QString::number(corpo->get_diametro()));
+        satellite->addChild(dato);
         dato= new QTreeWidgetItem();
         dato->setText(0,"Forza di Gravità");
-        dato->setText(1, QString::number(corpo->get_pointer()->get_forza_gravita()));
-        pianeta->addChild(dato);
+        dato->setText(1, QString::number(corpo->get_forza_gravita()));
+        satellite->addChild(dato);
         dato= new QTreeWidgetItem();
         dato->setText(0,"Tipo");
-        dato->setText(1, corpo->get_pointer()->get_tipo());
-        pianeta->addChild(dato);
+        dato->setText(1, corpo->get_tipo());
+        satellite->addChild(dato);
         dato= new QTreeWidgetItem();
         dato->setText(0,"Pianeta orbitato");
-        dato->setText(1, corpo->get_pointer()->get_pianeta_orbitato()->get_nome());
-        pianeta->addChild(dato);
+        dato->setText(1, corpo->get_pianeta_orbitato()->get_nome());
+        satellite->addChild(dato);
 
     }
 }

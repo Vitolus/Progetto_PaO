@@ -23,7 +23,7 @@
       <enum>QTabWidget::Triangular</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="FormDati">
       <property name="toolTip">
@@ -384,6 +384,11 @@
          <column>
           <property name="text">
            <string>Dato</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string/>
           </property>
          </column>
         </widget>

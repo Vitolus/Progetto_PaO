@@ -5,11 +5,12 @@ Controller::Controller(){
 }
 
 void Controller::setController(){
-    connect(gui, &Gui::send_data, this, &Controller::add_Corpo);
+    connect(gui, &Gui::send_data, this, &Controller::add_corpo);
     connect(gui, &Gui::send_data, gui, &Gui::sclear);
     connect(gui, &Gui::send_data, gui, &Gui::pclear);
     connect(gui, &Gui::send_data, gui, &Gui::saclear);
     connect(this, &Controller::show_corpo, gui, &Gui::add_data);
+    connect(gui, &Gui::notify_remove, this, &Controller::remove_corpo);
 
 }
 
@@ -17,15 +18,14 @@ Gui *Controller::get_gui(){
     return gui;
 }
 
-void Controller::add_Corpo(const QStringList& st){
+void Controller::add_corpo(const QStringList& st){
     QLocale loc(QLocale::Italian);
     Deep_ptr<Corpo_celeste> corpo;
     if(st[0]=="Stella"){
         corpo= new Stella(st[1], loc.toFloat(st[2]), loc.toFloat(st[3]), loc.toFloat(st[4]));
-        Sistema_stellare<Deep_ptr<Corpo_celeste>>* sistema= new Sistema_stellare<Deep_ptr<Corpo_celeste>>(corpo);
-        sistemi.push_back(*sistema);
-        sistema= nullptr;
-        emit show_corpo(new Deep_ptr<Corpo_celeste>(corpo));
+        Sistema_stellare<Deep_ptr<Corpo_celeste>> sistema(corpo);
+        sistemi.push_back(sistema);
+        emit show_corpo(corpo);
 
     }else if(st[0]=="Pianeta"){
         auto i=-1, nSistema= -1;
@@ -41,7 +41,7 @@ void Controller::add_Corpo(const QStringList& st){
             else if(st[5]=="gassoso") tipo= false;
             corpo= new Pianeta(st[2],loc.toFloat(st[3]),loc.toFloat(st[4]),tipo);
             it->add(corpo);
-            emit show_corpo(new Deep_ptr<Corpo_celeste>(corpo), nSistema);
+            emit show_corpo(corpo, nSistema);
         }
 
     }else if(st[0]=="Satellite"){
@@ -62,8 +62,23 @@ void Controller::add_Corpo(const QStringList& st){
                 else if(st[5]=="gassoso") tipo= false;
                 corpo= new Satellite(st[2],loc.toFloat(st[3]),loc.toFloat(st[4]),tipo,dynamic_cast<Pianeta*>(po.get_pointer()));
                 it->add(corpo);
-                emit show_corpo(new Deep_ptr<Corpo_celeste>(corpo), nSistema);
+                emit show_corpo(corpo, nSistema);
             }
         }
+    }
+}
+
+void Controller::remove_corpo(const QString sistema, const QString corpo){
+    auto i= 0;
+    for(QVector<Sistema_stellare<Deep_ptr<Corpo_celeste>>>::iterator it= sistemi.begin(); it<sistemi.end(); ++it){
+        auto cIndex= it->search(corpo);
+        if(it->get_nome()==sistema && cIndex!=-1){
+            sistemi[i].remove(cIndex);
+            if(cIndex==0){
+                sistemi.remove(i);
+            }
+            return;
+        }
+        ++i;
     }
 }

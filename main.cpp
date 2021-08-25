@@ -7,6 +7,13 @@
 #include "stella.h"
 #include "pianeta.h"
 #include "satellite.h"
+#include <QVector>
+#include <QDebug>
+
+void temp(QVector<Sistema_stellare<Deep_ptr<Corpo_celeste>>>& sistemi){
+    Sistema_stellare<Deep_ptr<Corpo_celeste>> sis(new Stella("s2",1000,100));
+    sistemi.push_back(sis);
+}
 
 int main(int argc, char *argv[]){
     QApplication a(argc, argv);
